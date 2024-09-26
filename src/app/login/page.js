@@ -27,7 +27,7 @@ function page() {
                 Full Name
               </p>
               <input
-                className="w-full px-[20px] py-3 outline-none rounded-full border border-gray-500"
+                className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500"
                 type="text"
                 placeholder="Enter your username or email"
               />
@@ -38,16 +38,16 @@ function page() {
               Username or Email
             </p>
             <input
-              className="w-full px-[20px] py-3 outline-none rounded-full border border-gray-500"
+              className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500"
               type="text"
               placeholder="Enter your username or email"
             />
           </div>
           <div className="space-y-2">
             <p className="text-[20px] text-[#4f4f4f] font-semibold">Password</p>
-            <div className="flex items-center justify-between rounded-full border border-gray-500 pr-[20px]">
+            <div className="flex items-center justify-between rounded-lg border border-gray-500 pr-[20px]">
               <input
-                className="w-full pl-[20px] py-3 flex-1 outline-none rounded-full border-none text-[16px]"
+                className="w-full pl-[20px] py-3 flex-1 outline-none rounded-lg border-none text-[16px]"
                 type="password"
                 placeholder="Enter your Password"
               />
@@ -59,9 +59,9 @@ function page() {
               <p className="text-[20px] text-[#4f4f4f] font-semibold">
                 Confirm Password
               </p>
-              <div className="flex items-center justify-between rounded-full border border-gray-500 pr-[20px]">
+              <div className="flex items-center justify-between rounded-lg border border-gray-500 pr-[20px]">
                 <input
-                  className="w-full pl-[20px] py-3 flex-1 outline-none rounded-full border-none text-[16px]"
+                  className="w-full pl-[20px] py-3 flex-1 outline-none rounded-lg border-none text-[16px]"
                   type="password"
                   placeholder="Enter your Password"
                 />
@@ -84,11 +84,11 @@ function page() {
           </div>
         </div>
         {signUp ? (
-          <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-full text-white font-semibold">
+          <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold">
             Sign Up
           </button>
         ) : (
-          <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-full text-white font-semibold">
+          <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold">
             Sign In
           </button>
         )}
@@ -121,17 +121,17 @@ function page() {
             <Image
               src={fb}
               alt=""
-              className="h-[40px] w-[40px] rounded-full bg-[#f1f1f1] p-2 cursor-pointer"
+              className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer"
             />
             <Image
               src={google}
               alt=""
-              className="h-[40px] w-[40px] rounded-full bg-[#f1f1f1] p-2 cursor-pointer"
+              className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer"
             />
             <Image
               src={apple}
               alt=""
-              className="h-[40px] w-[40px] rounded-full bg-[#f1f1f1] p-2 cursor-pointer"
+              className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer"
             />
           </div>
         </div>
