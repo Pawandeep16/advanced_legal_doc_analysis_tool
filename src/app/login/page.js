@@ -7,13 +7,14 @@ import google from "../Assets/icons/google.webp";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Header from "../Component/Header";
+import Logo from "../Assets/icons/Logo_dark.svg"
 
 function page() {
   const [signUp, setSignUp] = useState(false);
 
   const pathname = usePathname();
 
-  console.log(pathname);
+  
 
   return (
     <div>
@@ -21,9 +22,10 @@ function page() {
       <div className="flex flex-col items-center justify-center h-screen">
         <div className="w-[30%] flex flex-col items-center justify-center space-y-[30px]">
           <div className="space-y-[15px]">
-            <h1 className="text-5xl text-[#1f3e57] text-center">
-              {signUp ? "Sign Up" : "Login"} to DOCINSIGHT
-            </h1>
+            <div className=" flex space-x-2 ">
+                <h1 className="text-5xl text-[#1f3e57]"> {signUp ? "Sign Up" : "Login"}  to </h1>   <Logo className=" e-x-10 w-[300px] h-[60px]"  /> 
+              
+            </div>
             <p className="text-gray-400 text-[20px] text-center">
               Welcome Back! Please enter your details
             </p>
