@@ -13,6 +13,7 @@ pnpm dev
 # or
 bun dev
 ```
+Minimum node version 20.0.0
 
 Lottie animations:
 npm install lottie-web react-lottie

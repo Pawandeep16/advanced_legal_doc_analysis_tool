@@ -7,8 +7,8 @@ function Header() {
   const router = useRouter();
   const pathname = usePathname();
   return (
-    <div className="flex items-center justify-between px-3 py-6 bg-[#1f3e57]  h-[70px]">
-      <Logo onClick={() => router.push("/")} className=" w-[200px] h-10" />
+    <div className="flex items-center justify-between px-3 py-6 bg-[#1f3e57]  h-[70px]  sticky top-0 z-50">
+      <Logo onClick={() => router.push("/")} className=" w-[200px] h-10 hover:cursor-pointer " />
       <div>
         <h2
           onClick={() => router.push("/login")}
