@@ -7,14 +7,21 @@ import google from "../Assets/icons/google.webp";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Header from "../Component/Header";
-import Logo from "../Assets/icons/Logo_dark.svg"
+import Logo from "../Assets/icons/Logo_dark.svg";
+import { getProviders, signIn } from "next-auth/react";
 
 function page() {
   const [signUp, setSignUp] = useState(false);
 
   const pathname = usePathname();
 
-  
+  const provider = getProviders();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  console.log({ provider });
 
   return (
     <div>
@@ -23,8 +30,11 @@ function page() {
         <div className="w-[30%] flex flex-col items-center justify-center space-y-[30px]">
           <div className="space-y-[15px]">
             <div className=" flex space-x-2 ">
-                <h1 className="text-5xl text-[#1f3e57]"> {signUp ? "Sign Up" : "Login"}  to </h1>   <Logo className=" e-x-10 w-[300px] h-[60px]"  /> 
-              
+              <h1 className="text-5xl text-[#1f3e57]">
+                {" "}
+                {signUp ? "Sign Up" : "Login"} to{" "}
+              </h1>{" "}
+              <Logo className=" e-x-10 w-[300px] h-[60px]" />
             </div>
             <p className="text-gray-400 text-[20px] text-center">
               Welcome Back! Please enter your details
@@ -33,28 +43,39 @@ function page() {
           <div className="w-full space-y-[20px]">
             {signUp && (
               <div className="space-y-[15px]">
-                <p className="text-[20px] text-[#4f4f4f] font-semibold">
+                <p
+                  onChange={(e) => setName(e.target.value)}
+                  className="text-[20px] text-[#4f4f4f] font-semibold"
+                >
                   Full Name
                 </p>
                 <input
                   className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500"
                   type="text"
                   placeholder="Enter your username or email"
+                  required
                 />
               </div>
             )}
             <div className="space-y-[15px]">
-              <p className="text-[20px] text-[#4f4f4f] font-semibold">
+              <p
+                onChange={(e) => setEmail(e.target.value)}
+                className="text-[20px] text-[#4f4f4f] font-semibold"
+              >
                 Username or Email
               </p>
               <input
                 className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500"
                 type="text"
                 placeholder="Enter your username or email"
+                required
               />
             </div>
             <div className="space-y-2">
-              <p className="text-[20px] text-[#4f4f4f] font-semibold">
+              <p
+                onChange={(e) => setPassword(e.target.value)}
+                className="text-[20px] text-[#4f4f4f] font-semibold"
+              >
                 Password
               </p>
               <div className="flex items-center justify-between rounded-lg border border-gray-500 pr-[20px]">
@@ -62,11 +83,7 @@ function page() {
                   className="w-full pl-[20px] py-3 flex-1 outline-none rounded-lg border-none text-[16px]"
                   type="password"
                   placeholder="Enter your Password"
-                />
-                <Image
-                  src={eyeIcon}
-                  alt=""
-                  className="h-6 w-6 cursor-pointer"
+                  required
                 />
               </div>
             </div>
@@ -80,6 +97,7 @@ function page() {
                     className="w-full pl-[20px] py-3 flex-1 outline-none rounded-lg border-none text-[16px]"
                     type="password"
                     placeholder="Enter your Password"
+                    required
                   />
                   <Image
                     src={eyeIcon}
@@ -100,11 +118,11 @@ function page() {
             </div>
           </div>
           {signUp ? (
-            <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold">
+            <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out">
               Sign Up
             </button>
           ) : (
-            <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold">
+            <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out">
               Sign In
             </button>
           )}
@@ -133,22 +151,24 @@ function page() {
             <p className="text-center text-[18px] text-[#4f4f4f]">
               Or Login With
             </p>
-            <div className="flex items-center space-x-8">
+            <div key={provider.name} className="flex items-center space-x-8">
               <Image
                 src={fb}
+                onClick={() => signIn("facebook")}
                 alt=""
-                className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer"
+                className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
               />
               <Image
+                onClick={() => signIn("google")}
                 src={google}
                 alt=""
-                className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer"
+                className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
               />
-              <Image
+              {/* <Image
                 src={apple}
                 alt=""
-                className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer"
-              />
+                className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
+              /> */}
             </div>
           </div>
         </div>
