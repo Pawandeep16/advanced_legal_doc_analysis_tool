@@ -5,7 +5,7 @@ import apple from "../Assets/icons/apple.png";
 import fb from "../Assets/icons/fb.png";
 import google from "../Assets/icons/google.webp";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Header from "../Component/Header";
 import Logo from "../Assets/icons/Logo_dark.svg";
 import { getProviders, signIn } from "next-auth/react";
@@ -17,11 +17,11 @@ function page() {
 
   const provider = getProviders();
 
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  console.log({ provider });
 
   return (
     <div>
@@ -154,7 +154,11 @@ function page() {
             <div key={provider.name} className="flex items-center space-x-8">
               <Image
                 src={fb}
-                onClick={() => signIn("facebook")}
+                onClick={() =>
+                  signIn("facebook").then((data) => {
+                    console.log(data);
+                  })
+                }
                 alt=""
                 className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
               />

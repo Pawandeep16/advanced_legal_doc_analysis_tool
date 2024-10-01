@@ -2,6 +2,7 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const options: NextAuthOptions = {
     providers: [
@@ -15,6 +16,21 @@ export const options: NextAuthOptions = {
         }),
     ],
     // secret: process.env.NEXTAUTH_SECRET,
+
+    session: {
+        strategy: "jwt", // Use JWT (JSON Web Tokens) for the session
+        maxAge: 30 * 24 * 60 * 60, // 30 days (how long the session lasts)
+        updateAge: 24 * 60 * 60, // Update the session every 24 hours
+    },
+
+    // Optional: Add a callback to manage session information
+    callbacks: {
+        async session({ session, token }) {
+            // Add custom fields to the session if needed
+            session.user.id = token.sub;
+            return session;
+        },
+    },
 };
 
 const handler = NextAuth(options);

@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import Lottie from "react-lottie";
 import animationData from "../Assets/aniamtion/cloudUpload.json";
+import { useSession } from "next-auth/react";
 
 function UplaodVideo() {
   const defaultOptions = {
@@ -16,6 +17,10 @@ function UplaodVideo() {
 
   const filePickerRef = useRef(null);
 
+  const { data: session, status } = useSession();
+
+  console.log({ session });
+
   return (
     <div className="max-w-[80%] mx-auto bg-[#1f3e57] h-[250px] text-white flex items-center justify-center rounded-md flex-col p-10">
       <Lottie options={defaultOptions} height={400} width={400} />
@@ -26,9 +31,6 @@ function UplaodVideo() {
         Upload Document
       </button>
       <input type="file" className="hidden" ref={filePickerRef} />
-      {/* {status === "loading" && <p>Loading...</p>}
-      {status === "authenticated" && <p>Welcome, {session.user.name}</p>}
-      {status === "unauthenticated" && <p>You need to log in.</p>} */}
     </div>
   );
 }
