@@ -3,6 +3,7 @@ import React from "react";
 import Logo from "../Assets/icons/Logo.svg";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 
 function Header() {
   const router = useRouter();
@@ -14,14 +15,35 @@ function Header() {
 
   return (
     <div className="flex items-center justify-between px-3 py-6 bg-[#1f3e57]  h-[70px]  sticky top-0 z-50">
-      <Logo onClick={() => router.push("/")} className=" w-[200px] h-10 hover:cursor-pointer " />
-      <div>
+      <Logo
+        onClick={() => router.push("/")}
+        className=" w-[200px] h-10 hover:cursor-pointer "
+      />
+      {/* <div className="flex items-center space-x-4">
+        <p className="text-[#f5f5f5] text-xl hover:scale-90 hover:cursor-pointer transition-transform duration-500 ease-in-out">
+          Create Document
+        </p>
+        <p className="text-[#f5f5f5] text-xl hover:scale-90 hover:cursor-pointer transition-transform duration-500 ease-in-out">
+          Create Document
+        </p>
+        <p className="text-[#f5f5f5] text-xl hover:scale-90 hover:cursor-pointer transition-transform duration-500 ease-in-out">
+          Create Document
+        </p>
+      </div> */}
+      <div className="flex items-center">
         <h2
           onClick={() => router.push("/login")}
           className="text-xl cursor-pointer text-[#F5F5F5]"
         >
           {status === "authenticated" ? (
-            <h2 onClick={() => signOut()}>Welcome {session?.user?.name}!</h2>
+            <Image
+              onClick={() => signOut()}
+              src={session?.user?.image}
+              alt=""
+              height={50}
+              width={50}
+              className=" object-cover rounded-full"
+            />
           ) : (
             pathname !== "/login" && "Login / Signup"
           )}

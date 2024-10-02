@@ -20,17 +20,18 @@ function UplaodVideo() {
   const { data: session, status } = useSession();
 
   console.log({ session });
-
   return (
-    <div className="max-w-[80%] mx-auto bg-[#1f3e57] h-[250px] text-white flex items-center justify-center rounded-md flex-col p-10">
-      <Lottie options={defaultOptions} height={400} width={400} />
-      <button
-        onClick={() => filePickerRef.current.click()}
-        className="px-2 py-1 text-black bg-white rounded-lg text-xl mt-2"
-      >
-        Upload Document
-      </button>
-      <input type="file" className="hidden" ref={filePickerRef} />
+    <div className="bg-[#1f3e57] p-4 max-w-[80%] mx-auto h-[250px] rounded-lg">
+      <div className=" bg-[#1e265350] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400">
+        <Lottie options={defaultOptions} height={100} width={100} />
+        <button
+          onClick={() => filePickerRef.current.click()}
+          className="px-4 py-1 text-black bg-white rounded-lg text-lg mt-2"
+        >
+          Upload Document
+        </button>
+        <input type="file" className="hidden" ref={filePickerRef} />
+      </div>
     </div>
   );
 }
