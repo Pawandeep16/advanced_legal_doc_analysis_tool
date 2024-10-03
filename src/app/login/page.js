@@ -9,19 +9,70 @@ import { usePathname, useRouter } from "next/navigation";
 import Header from "../Component/Header";
 import Logo from "../Assets/icons/Logo_dark.svg";
 import { getProviders, signIn } from "next-auth/react";
+import axios from "axios";
 
 function page() {
   const [signUp, setSignUp] = useState(false);
 
-  const pathname = usePathname();
-
   const provider = getProviders();
-
-  const router = useRouter();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+
+  const router = useRouter();
+
+  const signInWithGoogle = () => {
+    signIn("google", { callbackUrl: "/" }).catch((error) => {
+      console.error("Error during sign-in:", error);
+    });
+  };
+
+  const signUpWithCred = async (email, password, name) => {
+    try {
+      // Check if passwords match
+
+      // Create an object with user data
+      const data = {
+        email: email,
+        password,
+        fullName: name,
+      };
+
+      // Send POST request to the backend
+      await axios.post("http://localhost:5000/api/user/registerUser", data, {
+        headers: {
+          "Content-Type": "application/json", // Ensure content-type is set to JSON
+        },
+      });
+
+      // Navigate to home page after successful registration
+      router.push("/");
+    } catch (err) {
+      // Log detailed error info
+      console.error("Error during sign-up:", err.response?.data || err.message);
+    }
+  };
+
+  const signInWithCred = async (email, password) => {
+    try {
+      const data = {
+        email: email,
+        password,
+      };
+
+      await axios.post("http://localhost:5000/api/user/loggedInUser", data, {
+        headers: {
+          "Content-Type": "application/json", // Ensure content-type is set to JSON
+        },
+      });
+      router.push("/");
+    } catch (err) {
+      // Log detailed error info
+      console.error("Error during sign-up:", err.response?.data || err.message);
+    }
+  };
 
   return (
     <div>
@@ -43,13 +94,11 @@ function page() {
           <div className="w-full space-y-[20px]">
             {signUp && (
               <div className="space-y-[15px]">
-                <p
-                  onChange={(e) => setName(e.target.value)}
-                  className="text-[20px] text-[#4f4f4f] font-semibold"
-                >
+                <p className="text-[20px] text-[#4f4f4f] font-semibold">
                   Full Name
                 </p>
                 <input
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500"
                   type="text"
                   placeholder="Enter your username or email"
@@ -58,28 +107,24 @@ function page() {
               </div>
             )}
             <div className="space-y-[15px]">
-              <p
-                onChange={(e) => setEmail(e.target.value)}
-                className="text-[20px] text-[#4f4f4f] font-semibold"
-              >
+              <p className="text-[20px] text-[#4f4f4f] font-semibold">
                 Username or Email
               </p>
               <input
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500"
-                type="text"
+                type="email"
                 placeholder="Enter your username or email"
                 required
               />
             </div>
             <div className="space-y-2">
-              <p
-                onChange={(e) => setPassword(e.target.value)}
-                className="text-[20px] text-[#4f4f4f] font-semibold"
-              >
+              <p className="text-[20px] text-[#4f4f4f] font-semibold">
                 Password
               </p>
               <div className="flex items-center justify-between rounded-lg border border-gray-500 pr-[20px]">
                 <input
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-[20px] py-3 flex-1 outline-none rounded-lg border-none text-[16px]"
                   type="password"
                   placeholder="Enter your Password"
@@ -94,6 +139,7 @@ function page() {
                 </p>
                 <div className="flex items-center justify-between rounded-lg border border-gray-500 pr-[20px]">
                   <input
+                    onChange={(e) => setconfirmPassword(e.target.value)}
                     className="w-full pl-[20px] py-3 flex-1 outline-none rounded-lg border-none text-[16px]"
                     type="password"
                     placeholder="Enter your Password"
@@ -118,11 +164,19 @@ function page() {
             </div>
           </div>
           {signUp ? (
-            <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out">
+            <button
+              onClick={() =>
+                signUpWithCred(email, password, name, confirmPassword)
+              }
+              className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out"
+            >
               Sign Up
             </button>
           ) : (
-            <button className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out">
+            <button
+              onClick={() => signInWithCred(email, password)}
+              className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out"
+            >
               Sign In
             </button>
           )}
@@ -163,7 +217,7 @@ function page() {
                 className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
               />
               <Image
-                onClick={() => signIn("google")}
+                onClick={signInWithGoogle}
                 src={google}
                 alt=""
                 className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
