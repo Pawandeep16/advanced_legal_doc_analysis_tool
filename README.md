@@ -13,6 +13,7 @@ pnpm dev
 # or
 bun dev
 ```
+
 Minimum node version 20.0.0
 
 Lottie animations:
@@ -23,6 +24,9 @@ npm install @svgr/webpack
 
 Install next authentication
 npm install next-auth
+
+Install Axios
+npm i axios
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

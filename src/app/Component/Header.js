@@ -11,25 +11,12 @@ function Header() {
 
   const { data: session, status } = useSession();
 
-  console.log(status);
-
   return (
     <div className="flex items-center justify-between px-3 py-6 bg-[#1f3e57]  h-[70px]  sticky top-0 z-50">
       <Logo
         onClick={() => router.push("/")}
         className=" w-[200px] h-10 hover:cursor-pointer "
       />
-      {/* <div className="flex items-center space-x-4">
-        <p className="text-[#f5f5f5] text-xl hover:scale-90 hover:cursor-pointer transition-transform duration-500 ease-in-out">
-          Create Document
-        </p>
-        <p className="text-[#f5f5f5] text-xl hover:scale-90 hover:cursor-pointer transition-transform duration-500 ease-in-out">
-          Create Document
-        </p>
-        <p className="text-[#f5f5f5] text-xl hover:scale-90 hover:cursor-pointer transition-transform duration-500 ease-in-out">
-          Create Document
-        </p>
-      </div> */}
       <div className="flex items-center">
         <h2
           onClick={() => router.push("/login")}
