@@ -1,0 +1,97 @@
+"use client";
+import Image from "next/image";
+import React, { useState } from "react";
+import { init, send } from '@emailjs/browser';
+
+// Initialize EmailJS with your User ID
+init('user_6xnkAOnakPLCYPRAVZ4zR'); // Replace with your EmailJS User ID
+
+function ContactUs() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setResponseMessage(''); // Clear previous messages
+
+    const templateParams = {
+      name:name,
+      email: email,
+      message: message,
+
+    };
+
+  
+    
+
+
+    try {
+      const response = await send('service_l1r912o', 'template_9uepqru', templateParams);
+
+      if (response.status === 200) {
+        setResponseMessage('Message sent successfully!');
+      } else {
+        setResponseMessage('Failed to send message.');
+      }
+    } catch (error) {
+      console.error('Error occurred while sending message:', error);
+      setResponseMessage('An error occurred while sending the message.');
+    }
+  };
+
+  return (
+    <div className="relative bg-black h-screen my-auto flex justify-between text-white">
+      <div className="z-20 mt-20 p-10 flex justify-center items-center flex-col">
+        <h1 className="text-8xl text-white font-bold">Contact Us</h1>
+        <div className="mt-10 text-black ml-14">
+          <form onSubmit={handleSubmit}>
+          <input
+              className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500 mb-5"
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <input
+              className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500 mb-5"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <textarea
+              className="w-full px-[20px] py-9 outline-none rounded-lg border border-gray-500 h-60 text-start mb-5"
+              placeholder="Please write your message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-[#750a6c] h-16 text-white font-bold text-2xl rounded-sm hover:bg-[#b733ac]"
+            >
+              Submit
+            </button>
+          </form>
+          {responseMessage && (
+            <p className="mt-5 text-center text-white font-bold">{responseMessage}</p>
+          )}
+        </div>
+      </div>
+      <Image
+        src="/Assets/Images/conatus.png"
+        alt="Conatus Icon"
+        height={500}
+        width={1200}
+        className=""
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#5e066f] via-black/20 to-black opacity-100 z-10"></div>
+    </div>
+  );
+}
+
+export default ContactUs;
