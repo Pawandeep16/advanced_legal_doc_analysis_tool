@@ -34,4 +34,22 @@ import upload from  "../Assets/icons/documentUpload.png"
     ]
 
 
+// Pricing Plan
+export const plans = [
+  {
+    plan: 'Free Trial',
+    price: '0',
+    features: ['7-day free trial to explore all premium features', 'Access to AI-driven document analysis tools', 'Collaboration for up to 3 users', '100 document uploads'],
+  },
+  {
+    plan: 'Professional Plan',
+    price: '79',
+    features: ['Advanced Summarization', 'Customizable Templates', 'AI-Powered Decision Making', 'Priority Email Support'],
+  },
+  {
+    plan: 'Enterprise Plan',
+    price: 'Email Us',
+    features: ['Dedicated Account Manager', 'Enhanced Security', 'API Access', '24/7 Support'],
+  },
+];
   
