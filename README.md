@@ -34,8 +34,9 @@ Install Framer Motion for Animations
 install React Observer intersection 
 - npm install react-intersection-observer
 
-install node mailer
-npm install nodemailer
+install emailjs - for getting mails 
+npm install @emailjs/browser
+
 
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

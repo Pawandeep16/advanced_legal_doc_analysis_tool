@@ -12,25 +12,39 @@ function Header() {
   const { data: session, status } = useSession();
 
   return (
-    <div className="flex items-center justify-between px-3 py-6 bg-[#1f3e57]  h-[70px]  sticky top-0 z-50">
+    <div className="flex items-center justify-between px-4 py-4 bg-[#1f3e57] h-[70px] sticky top-0 z-50">
+      {/* Logo */}
       <Logo
         onClick={() => router.push("/")}
-        className=" w-[200px] h-10 hover:cursor-pointer "
+        className="w-[150px] md:w-[200px] h-8 md:h-10 hover:cursor-pointer"
       />
-      <div className="flex items-center">
+
+      {/* User Profile / Login Button */}
+      <div className="flex items-center space-x-4">
         <h2
           onClick={() => router.push("/login")}
-          className="text-xl cursor-pointer text-[#F5F5F5]"
+          className="text-sm md:text-xl cursor-pointer text-[#F5F5F5]"
         >
           {status === "authenticated" ? (
-            <Image
-              onClick={() => signOut()}
-              src={session?.user?.image}
-              alt=""
-              height={50}
-              width={50}
-              className=" object-cover rounded-full"
-            />
+            <div className="relative flex justify-center items-center">
+              {/* Outer circle */}
+              <div className="rounded-full bg-[#ffffff2a] w-12 h-12 md:w-16 md:h-16 lg:w-18 lg:h-18 flex justify-center items-center">
+                {/* Middle circle */}
+                <div className="rounded-full bg-[#ffffff7a] w-[70%] h-[70%] flex justify-center items-center">
+                  {/* Inner circle */}
+                  <div className="rounded-full bg-white w-full h-full flex justify-center items-center">
+                    <Image
+                      onClick={() => signOut()}
+                      src={session?.user?.image}
+                      alt="profile pic"
+                      height={50}
+                      width={50}
+                      className="object-cover rounded-full"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : (
             pathname !== "/login" && "Login / Signup"
           )}

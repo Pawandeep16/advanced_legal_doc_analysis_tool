@@ -17,15 +17,10 @@ function ContactUs() {
     setResponseMessage(''); // Clear previous messages
 
     const templateParams = {
-      name:name,
+      name: name,
       email: email,
       message: message,
-
     };
-
-  
-    
-
 
     try {
       const response = await send('service_l1r912o', 'template_9uepqru', templateParams);
@@ -42,13 +37,13 @@ function ContactUs() {
   };
 
   return (
-    <div className="relative bg-black h-screen my-auto flex justify-between text-white">
-      <div className="z-20 mt-20 p-10 flex justify-center items-center flex-col">
-        <h1 className="text-8xl text-white font-bold">Contact Us</h1>
-        <div className="mt-10 text-black ml-14">
+    <div className="relative bg-black h-full flex flex-col-reverse  lg:flex-row text-white">
+      <div className="z-20 mt-20 p-10 flex flex-col justify-center items-center lg:w-1/2">
+        <h1 className="text-6xl md:text-8xl font-bold text-center">Contact Us</h1>
+        <div className="mt-10 w-full max-w-lg">
           <form onSubmit={handleSubmit}>
-          <input
-              className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500 mb-5"
+            <input
+              className="w-full px-4 py-3 outline-none rounded-lg border border-gray-500 mb-5"
               type="text"
               placeholder="Enter your name"
               value={name}
@@ -56,7 +51,7 @@ function ContactUs() {
               required
             />
             <input
-              className="w-full px-[20px] py-3 outline-none rounded-lg border border-gray-500 mb-5"
+              className="w-full px-4 py-3 outline-none rounded-lg border border-gray-500 mb-5"
               type="email"
               placeholder="Enter your email"
               value={email}
@@ -64,7 +59,7 @@ function ContactUs() {
               required
             />
             <textarea
-              className="w-full px-[20px] py-9 outline-none rounded-lg border border-gray-500 h-60 text-start mb-5"
+              className="w-full px-4 py-3 outline-none rounded-lg border border-gray-500 h-40 mb-5 resize-none"
               placeholder="Please write your message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -72,7 +67,7 @@ function ContactUs() {
             />
             <button
               type="submit"
-              className="w-full bg-[#750a6c] h-16 text-white font-bold text-2xl rounded-sm hover:bg-[#b733ac]"
+              className="w-full bg-[#750a6c] h-16 text-white font-bold text-lg rounded-sm hover:bg-[#b733ac]"
             >
               Submit
             </button>
@@ -82,13 +77,16 @@ function ContactUs() {
           )}
         </div>
       </div>
-      <Image
-        src="/Assets/Images/conatus.png"
-        alt="Conatus Icon"
-        height={500}
-        width={1200}
-        className=""
-      />
+      <div className="lg:w-1/2  ">
+        <Image
+          src="/Assets/Images/conatus.png"
+          alt="Conatus Icon"
+          layout="responsive"
+          height={500}
+          width={1200}
+          className="object-cover"
+        />
+      </div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#5e066f] via-black/20 to-black opacity-100 z-10"></div>
     </div>
   );
