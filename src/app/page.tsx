@@ -1,41 +1,44 @@
-"use client"
-import Header from './Component/Header'
-import UploadVideo from './Component/UplaodVideo'
-import Services from './Component/Services'
-import Tabs from "./Component/Tabs"
-import Topbar from './Component/Topbar.js'
-import Questions from './Tabs/Questions'
-import Summarization from './Tabs/Summarization'
-import History from './Tabs/History'
-import { useState } from 'react'
+"use client";
+import Header from './Component/Header';
+import UploadVideo from './Component/UplaodVideo';
+import Services from './Component/Services';
+import Tabs from "./Component/Tabs";
+import Topbar from './Component/Topbar.js';
+import Questions from './Tabs/Questions';
+import Summarization from './Tabs/Summarization';
+import History from './Tabs/History';
+import { useState } from 'react';
 
 export default function Home() {
-  const [selected, setSelected] = useState('Summarization')
+  const [selected, setSelected] = useState('Summarization');
+  const [activeQuestion, setActiveQuestion] = useState("");
+  const [summary, setSummary] = useState('')
 
-  const getTab = (selectedTab) => {
-    let myTab = <></>;
+  console.log(summary);
+
+
+  const getTab = (selectedTab: string) => {
     switch (selectedTab) {
       case "Q&A":
-        return (myTab = <Questions />);
+        return <Questions />;
       case "Summarization":
-        return (myTab = <Summarization />);
+        return <Summarization getSummary={summary} activeQuestion={activeQuestion} setActiveQuestion={setActiveQuestion} />;
       case "History":
-        return (myTab = <History />);
+        return <History />;
       default:
-        return (myTab = <select />);
+        return <div>Select a valid tab</div>;
     }
-    return myTab;
   };
 
-  const SelectedTab = getTab(selected)
+
+  const SelectedTab = getTab(selected);
+
   return (
     <div className="space-y-6 scroll-smooth">
       <Header />
-      <UploadVideo />
-      <Topbar selcted={selected} setSeleccted={setSelected} />
-      {/* <Questions /> */}
-      <SelectedTab.type />
-      {/* <Tabs /> */}
+      <UploadVideo summary={summary} setSummary={setSummary} question={activeQuestion} />
+      <Topbar activeTab={selected} setActiveTab={setSelected} />
+      {SelectedTab}
     </div>
   );
 }
