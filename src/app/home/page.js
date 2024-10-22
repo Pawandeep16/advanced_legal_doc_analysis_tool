@@ -32,7 +32,7 @@ function Homepage() {
             Revolutionizing Legal Workflows with AI-Powered Document Analysis
           </h2>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57] via-black/20 to-black opacity-100"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57]/90 via-black/20 to-black opacity-100"></div>
       </div>
 
       {/* About Section */}
