@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie";
 import animationData from "../Assets/aniamtion/cloudUpload.json";
 import { useSession } from "next-auth/react";
@@ -17,7 +17,7 @@ function UplaodVideo() {
   const filePickerRef = useRef(null);
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [user, setUser] = useState();
   const { data: session, status } = useSession();
 
   const handleFileUpload = async (event) => {
@@ -58,16 +58,38 @@ function UplaodVideo() {
     }
   };
 
+  const userString = localStorage.getItem("user"); // Get the JSON string from localStorage
+
+  const getUserById = async () => {
+    if (userString) {
+      // Parse the string into an object
+      const userDetail = JSON.parse(userString);
+      try {
+        await axios
+          .get(`http://localhost:5000/api/user/getuser/${userDetail.id}`)
+          .then((data) => {
+            setUser(data.data);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUserById();
+  }, []);
+
   return (
     <div>
-      <div className="bg-[#1f3e57] p-4 max-w-[80%] mx-auto h-[250px] rounded-lg">
-        <div className=" bg-[#1e265350] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400">
+      <div className="bg-[#2e324c] p-4 max-w-[80%] mx-auto h-[200px] rounded-lg">
+        <div className=" bg-[#222949] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400">
           <Lottie options={defaultOptions} height={100} width={100} />
           <button
             onClick={() => filePickerRef.current.click()}
-            className="px-4 py-1 text-black bg-white rounded-lg text-lg mt-2"
+            className="px-4 py-1 text-white bg-[#525672] rounded-lg text-lg mt-2"
           >
-            Upload Document (PDF, DOCX, XML)
+            Choose file
           </button>
           <input
             type="file"

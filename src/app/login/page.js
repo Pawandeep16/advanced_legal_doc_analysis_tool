@@ -41,14 +41,27 @@ function page() {
       };
 
       // Send POST request to the backend
-      await axios.post("http://localhost:5000/api/user/registerUser", data, {
-        headers: {
-          "Content-Type": "application/json", // Ensure content-type is set to JSON
-        },
-      });
+      await axios
+        .post("http://localhost:5000/api/user/registerUser", data, {
+          headers: {
+            "Content-Type": "application/json", // Ensure content-type is set to JSON
+          },
+        })
+        .then((data) => {
+          console.log(data.data);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              token: data.data.token,
+              email: data.data.user.email,
+              name: data.data.user.fullName,
+            })
+          );
+          router.push("/");
+        });
 
       // Navigate to home page after successful registration
-      router.push("/");
+      // router.push("/");
     } catch (err) {
       // Log detailed error info
       console.error("Error during sign-up:", err.response?.data || err.message);
@@ -62,12 +75,24 @@ function page() {
         password,
       };
 
-      await axios.post("http://localhost:5000/api/user/loggedInUser", data, {
-        headers: {
-          "Content-Type": "application/json", // Ensure content-type is set to JSON
-        },
-      });
-      router.push("/");
+      await axios
+        .post("http://localhost:5000/api/user/loggedInUser", data, {
+          headers: {
+            "Content-Type": "application/json", // Ensure content-type is set to JSON
+          },
+        })
+        .then((data) => {
+          console.log(data.data);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              token: data.data.token,
+              email: data.data.user.email,
+              id: data.data.user.id,
+            })
+          );
+          router.push("/");
+        });
     } catch (err) {
       // Log detailed error info
       console.error("Error during sign-up:", err.response?.data || err.message);
