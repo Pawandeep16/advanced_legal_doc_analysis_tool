@@ -15,19 +15,20 @@ export default function Home() {
 
   const [isOpen,setIsOpen] = useState (false);
 
-  const getTab = (selectedTab) => {
-    let myTab = <></>;
+  console.log(summary);
+
+
+  const getTab = (selectedTab: string) => {
     switch (selectedTab) {
       case "Q&A":
-        return (myTab = <Questions />);
+        return <Questions />;
       case "Summarization":
-        return (myTab = <Summarization />);
+        return <Summarization getSummary={summary} activeQuestion={activeQuestion} setActiveQuestion={setActiveQuestion} />;
       case "History":
-        return (myTab = <History />);
+        return <History />;
       default:
-        return (myTab = <select />);
+        return <div>Select a valid tab</div>;
     }
-    return myTab;
   };
 
   console.log(isOpen)

@@ -5,7 +5,7 @@ import animationData from "../Assets/aniamtion/cloudUpload.json";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 
-function UplaodVideo() {
+function UplaodVideo({ question, summary, setSummary }) {
   const defaultOptions = {
     loop: false,
     animationData: animationData,
@@ -15,15 +15,24 @@ function UplaodVideo() {
   };
 
   const filePickerRef = useRef(null);
-  const [summary, setSummary] = useState("");
+  // const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState();
   const { data: session, status } = useSession();
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const handleFileUpload = async (event) => {
+  const handleFileChange = (event) => {
     const file = event.target.files[0]; // Get the selected file
+    if (file) {
+      setSelectedFile(file); // Store the selected file in state
+      console.log("File selected:", file);
+    } else {
+      console.log("No file selected");
+    }
+  };
 
-    if (!file) {
+  const handleFileUpload = async () => {
+    if (!selectedFile) {
       console.log("No file selected");
       return;
     }
@@ -33,7 +42,8 @@ function UplaodVideo() {
     try {
       // Prepare form data
       const formData = new FormData();
-      formData.append("file", file); // Key should match what backend expects, here it's 'file'
+      formData.append("file", selectedFile); // Key should match what backend expects
+      formData.append("question", question); // Replace with actual question if needed
 
       // Send the file as form data to the backend API
       const response = await axios.post(
@@ -50,7 +60,7 @@ function UplaodVideo() {
       console.log("Full response:", response.data.summary);
 
       // Set the returned summary if present
-      setSummary(response.data.summary); // Assuming OpenAI API returns a summary in choices[0].message.content
+      setSummary(response.data.summary);
     } catch (error) {
       console.error("Error summarizing document:", error);
     } finally {
@@ -85,17 +95,27 @@ function UplaodVideo() {
       <div className="bg-[#2e324c] p-4  h-[200px] rounded-lg">
         <div className=" bg-[#222949] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400">
           <Lottie options={defaultOptions} height={100} width={100} />
-          <button
-            onClick={() => filePickerRef.current.click()}
-            className="px-4 py-1 text-white bg-[#525672] rounded-lg text-lg mt-2"
-          >
-            Choose file
-          </button>
+          {selectedFile && question ? (
+            <button
+              onClick={handleFileUpload}
+              className="px-4 py-1 text-white bg-[#525672] rounded-lg text-lg mt-2"
+            >
+              Upload
+            </button>
+          ) : (
+            <button
+              onClick={() => filePickerRef.current.click()}
+              className="px-4 py-1 text-white bg-[#525672] rounded-lg text-lg mt-2"
+            >
+              Choose file
+            </button>
+          )}
+
           <input
             type="file"
             className="hidden"
             ref={filePickerRef}
-            onChange={handleFileUpload}
+            onChange={handleFileChange}
           />
           {/* Display Loading State */}
           {loading && (
@@ -104,12 +124,6 @@ function UplaodVideo() {
           {/* Display Summary */}
         </div>
       </div>
-      {summary && (
-        <div className="bg-white text-black p-4 mt-4 rounded-lg">
-          <h3 className="text-lg font-bold">Document Summary:</h3>
-          <p>{summary}</p>
-        </div>
-      )}
     </div>
   );
 }

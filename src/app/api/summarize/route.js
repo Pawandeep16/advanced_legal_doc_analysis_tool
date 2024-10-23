@@ -88,9 +88,17 @@ async function parseXml(buffer) {
 export async function POST(request) {
   const formData = await request.formData();
   const file = formData.get("file");
+  const question = formData.get("question"); // Extract the question from form data
 
   if (!file || file.size === 0) {
     return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
+  }
+
+  if (!question || question.trim().length === 0) {
+    return NextResponse.json(
+      { error: "No question provided." },
+      { status: 400 }
+    );
   }
 
   try {
@@ -127,13 +135,26 @@ export async function POST(request) {
 
     console.log("Extracted content:", content);
 
-    // Call OpenAI API to summarize the extracted document
+    // Construct the messages array correctly
+    const messages = [
+      {
+        role: "system",
+        content: "Summarize this document based on the following question.",
+      },
+      {
+        role: "user",
+        content: `Document content: ${content}`,
+      },
+      {
+        role: "user",
+        content: `Question: ${question}`, // Add the question here
+      },
+    ];
+
+    // Call OpenAI API to summarize the extracted document based on the question
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: "Summarize this document." },
-        { role: "user", content: content },
-      ],
+      messages: messages, // Use the correctly structured messages
     });
 
     console.log("OpenAI Response:", response.choices[0].message.content);
