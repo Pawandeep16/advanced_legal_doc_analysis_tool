@@ -82,7 +82,7 @@ function UplaodVideo() {
 
   return (
     <div>
-      <div className="bg-[#2e324c] p-4 max-w-[80%] mx-auto h-[200px] rounded-lg">
+      <div className="bg-[#2e324c] p-4  h-[200px] rounded-lg">
         <div className=" bg-[#222949] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400">
           <Lottie options={defaultOptions} height={100} width={100} />
           <button
