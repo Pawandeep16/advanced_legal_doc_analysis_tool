@@ -4,8 +4,11 @@ import Lottie from "react-lottie";
 import animationData from "../Assets/aniamtion/cloudUpload.json";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import pdfIcon from "../Assets/icons/Pdficon.png";
+import wordIcon from "../Assets/icons/wordicon.png";
+import Image from "next/image";
 
-function UplaodVideo({ question, summary, setSummary }) {
+function UplaodVideo({ selectedFile, setSelectedFile, loading, setLoading }) {
   const defaultOptions = {
     loop: false,
     animationData: animationData,
@@ -15,58 +18,34 @@ function UplaodVideo({ question, summary, setSummary }) {
   };
 
   const filePickerRef = useRef(null);
-  // const [summary, setSummary] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [fileExtention, setFileExtention] = useState([]);
+
   const [user, setUser] = useState();
   const { data: session, status } = useSession();
-  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]; // Get the selected file
     if (file) {
       setSelectedFile(file); // Store the selected file in state
       console.log("File selected:", file);
+      setFileExtention(file.name.split("."));
     } else {
       console.log("No file selected");
     }
   };
 
-  const handleFileUpload = async () => {
-    if (!selectedFile) {
-      console.log("No file selected");
-      return;
-    }
-
-    setLoading(true); // Show loading state
-
-    try {
-      // Prepare form data
-      const formData = new FormData();
-      formData.append("file", selectedFile); // Key should match what backend expects
-      formData.append("question", question); // Replace with actual question if needed
-
-      // Send the file as form data to the backend API
-      const response = await axios.post(
-        "http://localhost:3000/api/summarize",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Important for file uploads
-          },
-        }
-      );
-
-      // Log the complete response for debugging
-      console.log("Full response:", response.data.summary);
-
-      // Set the returned summary if present
-      setSummary(response.data.summary);
-    } catch (error) {
-      console.error("Error summarizing document:", error);
-    } finally {
-      setLoading(false); // Hide loading state
+  const getFileExtention = (selectedFileExtention) => {
+    switch (selectedFileExtention) {
+      case "docx":
+        return <Image src={wordIcon} alt="" height={30} width={30} />;
+      case "pdf":
+        return <Image src={pdfIcon} alt="" height={30} width={30} />;
+      default:
+        return;
     }
   };
+
+  const myExtention = getFileExtention(fileExtention[1]);
 
   const userString = localStorage.getItem("user"); // Get the JSON string from localStorage
 
@@ -93,22 +72,22 @@ function UplaodVideo({ question, summary, setSummary }) {
   return (
     <div>
       <div className="bg-[#2e324c] p-4 max-w-[80%] mx-auto h-[200px] rounded-lg">
-        <div className=" bg-[#222949] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400">
-          <Lottie options={defaultOptions} height={100} width={100} />
-          {selectedFile && question ? (
-            <button
-              onClick={handleFileUpload}
-              className="px-4 py-1 text-white bg-[#525672] rounded-lg text-lg mt-2"
-            >
-              Upload
-            </button>
+        <div className=" bg-[#222949] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400 relative space-y-2">
+          {!selectedFile ? (
+            <>
+              <Lottie options={defaultOptions} height={100} width={100} />
+              <button
+                onClick={() => filePickerRef.current.click()}
+                className="px-4 py-1 text-white bg-[#525672] rounded-lg text-lg mt-2"
+              >
+                Choose file
+              </button>
+            </>
           ) : (
-            <button
-              onClick={() => filePickerRef.current.click()}
-              className="px-4 py-1 text-white bg-[#525672] rounded-lg text-lg mt-2"
-            >
-              Choose file
-            </button>
+            <>
+              {myExtention}
+              <p>{selectedFile?.name}</p>
+            </>
           )}
 
           <input
@@ -117,11 +96,7 @@ function UplaodVideo({ question, summary, setSummary }) {
             ref={filePickerRef}
             onChange={handleFileChange}
           />
-          {/* Display Loading State */}
-          {loading && (
-            <p className="text-white mt-4">Summarizing document...</p>
-          )}
-          {/* Display Summary */}
+          {loading && <p className="text-white mt-4">Scanning document...</p>}
         </div>
       </div>
     </div>
