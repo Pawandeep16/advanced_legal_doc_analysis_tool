@@ -1,32 +1,78 @@
 "use client";
-import Header from "./Component/Header";
-import UploadVideo from "./Component/UplaodVideo";
-import Services from "./Component/Services";
+import Header from './Component/Header';
+import UploadVideo from './Component/UplaodVideo';
+import Services from './Component/Services';
 import Tabs from "./Component/Tabs";
-import Topbar from "./Component/Topbar.js";
-import Questions from "./Tabs/Questions";
-import Summarization from "./Tabs/Summarization";
-import History from "./Tabs/History";
-import { useState } from "react";
-import SideBar from "./Component/sideBar";
-export default function Home() {
- 
+import Topbar from './Component/Topbar.js';
+import Questions from './Tabs/Questions';
+import Summarization from './Tabs/Summarization';
+import History from './Tabs/History';
+import { useState } from 'react';
 
-  const [isOpen,setIsOpen] = useState (true);
+export default function Home() {
+
+  type Chat = {
+    question: string;
+    answer: string;
+  };
 
   const [selected, setSelected] = useState('Summarization');
   const [activeQuestion, setActiveQuestion] = useState("");
   const [summary, setSummary] = useState('')
+  const [file, setFile] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [myChat, setMyChat] = useState<Chat[]>([]);
 
-  console.log(summary);
+
+  const handleSaveChat = () => {
+    setActiveQuestion('')
+    setFile(null)
+  }
+
+  const handleFileUpload = async () => {
+    if (!file) {
+      console.log("No file selected");
+      return;
+    }
+    setLoading(true); // Show loading state
+    try {
+      // Prepare form data
+      const formData = new FormData();
+      formData.append("file", file); // Key should match what backend expects
+      formData.append("question", activeQuestion); // Replace with actual question if needed
+
+      // Send the file as form data to the backend API
+      const response = await axios.post(
+        "http://localhost:3000/api/summarize",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for file uploads
+          },
+        }
+      );
+
+      // Log the complete response for debugging
+      console.log("Full response:", response.data.summary);
+
+      // Set the returned summary if present
+      setSummary(response.data.summary);
+      setMyChat((d) => [...d, { "question": activeQuestion, "answer": response.data.summary }])
+    } catch (error) {
+      console.error("Error summarizing document:", error);
+    } finally {
+      setLoading(false); // Hide loading state
+    }
+  }
+
 
 
   const getTab = (selectedTab: string) => {
     switch (selectedTab) {
       case "Q&A":
-        return <Questions />;
+        return <Questions setInput={setActiveQuestion} input={activeQuestion} handleFileUpload={handleFileUpload} save={handleSaveChat} myChat={myChat} />;
       case "Summarization":
-        return <Summarization getSummary={summary} activeQuestion={activeQuestion} setActiveQuestion={setActiveQuestion} />;
+        return <Summarization handleFileUpload={handleFileUpload} setLoading={setLoading} summary={summary} setSummary={setSummary} selectedFile={file} save={handleSaveChat} getSummary={summary} activeQuestion={activeQuestion} setActiveQuestion={setActiveQuestion} />;
       case "History":
         return <History />;
       default:
@@ -39,21 +85,11 @@ export default function Home() {
   const SelectedTab = getTab(selected);
 
   return (
-    <div className="scroll-smooth">
+    <div className="space-y-6 scroll-smooth">
       <Header />
-      <div className="flex w-full    ">
-        <div className= {`flex-none transition-transform duration-300 mr-2 ${isOpen? " w-1/6 " :"  "}`} >
-          <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
-          
-        </div>
-        <div className= {`mt-5  flex-1 pr-5 space-y-4  ${isOpen? " w-5/6 " :"   " }`} >
-        <UploadVideo summary={summary} setSummary={setSummary} question={activeQuestion} />
-        <Topbar activeTab={selected} setActiveTab={setSelected} />
-         
-          {SelectedTab}
-          
-        </div>
-      </div>
+      <UploadVideo summary={summary} setSummary={setSummary} question={activeQuestion} />
+      <Topbar activeTab={selected} setActiveTab={setSelected} />
+      {SelectedTab}
     </div>
   );
 }
