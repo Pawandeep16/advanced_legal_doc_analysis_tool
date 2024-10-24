@@ -10,10 +10,13 @@ import History from "./Tabs/History";
 import { useState } from "react";
 import SideBar from "./Component/sideBar";
 export default function Home() {
-  const [selected, setSelected] = useState("Summarization");
  
 
-  const [isOpen,setIsOpen] = useState (false);
+  const [isOpen,setIsOpen] = useState (true);
+
+  const [selected, setSelected] = useState('Summarization');
+  const [activeQuestion, setActiveQuestion] = useState("");
+  const [summary, setSummary] = useState('')
 
   console.log(summary);
 
@@ -31,7 +34,7 @@ export default function Home() {
     }
   };
 
-  console.log(isOpen)
+
 
   const SelectedTab = getTab(selected);
 
@@ -39,16 +42,16 @@ export default function Home() {
     <div className="scroll-smooth">
       <Header />
       <div className="flex w-full    ">
-        <div className= {`flex-none transition-transform duration-300 ${isOpen? " w-1/6 " :"  "}`} >
+        <div className= {`flex-none transition-transform duration-300 mr-2 ${isOpen? " w-1/6 " :"  "}`} >
           <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
           
         </div>
-        <div className= {`mt-5 w-[80%] flex-1 mx-auto pr-5 space-y-4  ${isOpen? " w-5/6 " :"   " }`} >
-          <UploadVideo />
-          <Topbar selcted={selected} setSeleccted={setSelected} />
-          {/* <Questions /> */}
-          <SelectedTab.type />
-          {/* <Tabs /> */}
+        <div className= {`mt-5  flex-1 pr-5 space-y-4  ${isOpen? " w-5/6 " :"   " }`} >
+        <UploadVideo summary={summary} setSummary={setSummary} question={activeQuestion} />
+        <Topbar activeTab={selected} setActiveTab={setSelected} />
+         
+          {SelectedTab}
+          
         </div>
       </div>
     </div>

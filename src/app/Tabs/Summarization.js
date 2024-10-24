@@ -37,18 +37,7 @@ function Summarization({ activeQuestion, setActiveQuestion, getSummary }) {
       </div>
       <div className="bg-[#525672]  w-full px-2 py-4 rounded-md">
         <h1 className="text-white text-lg ">
-          From this document, one can learn about the profile of a professional
-          Full-Stack Web Developer with skills in various technologies such as
-          React, Firebase, Bootstrap, and Material-UI, among others. The
-          individual possesses technical skills in web development and soft
-          skills like problem-solving, communication, and adaptability.
-          Additionally, the document provides insights on the educational
-          background and work experience of the developer, highlighting projects
-          worked on, including developing user interfaces for medical mobile
-          apps and collaborating with backend developers and other team members.
-          Overall, lessons on the importance of technical proficiency, soft
-          skills, continuous learning, and collaborative work can be learned
-          from this document.
+          {getSummary}
         </h1>
       </div>
     </div>
