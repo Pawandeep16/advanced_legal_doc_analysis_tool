@@ -37,6 +37,9 @@ install React Observer intersection
 install emailjs - for getting mails 
 npm install @emailjs/browser
 
+materila icons 
+npm install @mui/icons-material
+
 
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

@@ -4,9 +4,11 @@ import image from "../Assets/icons/hero.jpg";
 import Image from "next/image";
 import About from "../Component/About";
 import Information from "../Component/Information";
-import { components } from "../Component/info";
+import Pricing from "../Component/pricing";
+import { components } from '../Component/info';
 import PlansComp from "../Component/plansComp";
 import ContactUs from "../Component/ContactUs";
+import { motion } from 'framer-motion';
 
 function Homepage() {
   return (

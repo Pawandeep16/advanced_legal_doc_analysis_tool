@@ -1,14 +1,17 @@
 "use client";
-import Header from "./Component/Header";
-import UploadVideo from "./Component/UplaodVideo";
-import Topbar from "./Component/Topbar.js";
-import Questions from "./Tabs/Questions";
-import Summarization from "./Tabs/Summarization";
-import History from "./Tabs/History";
-import { useState } from "react";
-import axios from "axios";
-
+import Header from './Component/Header';
+import UploadVideo from './Component/UplaodVideo';
+import Services from './Component/Services';
+import Tabs from "./Component/Tabs";
+import Topbar from './Component/Topbar.js';
+import Questions from './Tabs/Questions';
+import Summarization from './Tabs/Summarization';
+import History from './Tabs/History';
+import { useState } from 'react';
+import SideBar from "../app/Component/sideBar"
 export default function Home() {
+
+
   type Chat = {
     question: string;
     answer: string;
@@ -20,6 +23,7 @@ export default function Home() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [myChat, setMyChat] = useState<Chat[]>([]);
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleSaveChat = () => {
     setActiveQuestion("");
@@ -98,19 +102,25 @@ export default function Home() {
     }
   };
 
+
   const SelectedTab = getTab(selected);
 
   return (
-    <div className="space-y-6 scroll-smooth">
+    <div className="scroll-smooth">
       <Header />
-      <UploadVideo
-        loading={loading}
-        setLoading={setLoading}
-        selectedFile={file}
-        setSelectedFile={setFile}
-      />
-      <Topbar activeTab={selected} setActiveTab={setSelected} />
-      {SelectedTab}
+      <div className="flex w-full    ">
+        <div className={`flex-none transition-transform duration-300 mr-2 ${isOpen ? " w-1/6 " : "  "}`} >
+          <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+
+        </div>
+        <div className={`mt-5  flex-1 pr-5 space-y-4  ${isOpen ? " w-5/6 " : "   "}`} >
+          <UploadVideo selectedFile={file} setSelectedFile={setFile} loading={loading} setLoading={setLoading} />
+          <Topbar activeTab={selected} setActiveTab={setSelected} />
+
+          {SelectedTab}
+
+        </div>
+      </div>
     </div>
   );
 }
