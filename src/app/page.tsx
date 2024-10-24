@@ -8,8 +8,9 @@ import Questions from './Tabs/Questions';
 import Summarization from './Tabs/Summarization';
 import History from './Tabs/History';
 import { useState } from 'react';
-
+import SideBar from "../app/Component/sideBar"
 export default function Home() {
+
 
   type Chat = {
     question: string;
@@ -22,6 +23,7 @@ export default function Home() {
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false);
   const [myChat, setMyChat] = useState<Chat[]>([]);
+  const [isOpen, setIsOpen] = useState(false)
 
 
   const handleSaveChat = () => {
@@ -85,11 +87,21 @@ export default function Home() {
   const SelectedTab = getTab(selected);
 
   return (
-    <div className="space-y-6 scroll-smooth">
-      <Header />
-      <UploadVideo summary={summary} setSummary={setSummary} question={activeQuestion} />
+    <div className="scroll-smooth">
+    <Header />
+    <div className="flex w-full    ">
+      <div className= {`flex-none transition-transform duration-300 mr-2 ${isOpen? " w-1/6 " :"  "}`} >
+        <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+        
+      </div>
+      <div className= {`mt-5  flex-1 pr-5 space-y-4  ${isOpen? " w-5/6 " :"   " }`} >
+      <UploadVideo selectedFile={file} setSelectedFile={setFile} loading={loading} setLoading={setLoading} />
       <Topbar activeTab={selected} setActiveTab={setSelected} />
-      {SelectedTab}
+       
+        {SelectedTab}
+        
+      </div>
     </div>
+  </div>
   );
 }
