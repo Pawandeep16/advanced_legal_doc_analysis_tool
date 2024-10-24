@@ -1,32 +1,30 @@
 "use client";
-import Header from './Component/Header';
-import UploadVideo from './Component/UplaodVideo';
-import Topbar from './Component/Topbar.js';
-import Questions from './Tabs/Questions';
-import Summarization from './Tabs/Summarization';
-import History from './Tabs/History';
-import { useState } from 'react';
-import axios from 'axios';
+import Header from "./Component/Header";
+import UploadVideo from "./Component/UplaodVideo";
+import Topbar from "./Component/Topbar.js";
+import Questions from "./Tabs/Questions";
+import Summarization from "./Tabs/Summarization";
+import History from "./Tabs/History";
+import { useState } from "react";
+import axios from "axios";
 
 export default function Home() {
-
   type Chat = {
     question: string;
     answer: string;
   };
 
-  const [selected, setSelected] = useState('Summarization');
+  const [selected, setSelected] = useState("Summarization");
   const [activeQuestion, setActiveQuestion] = useState("");
-  const [summary, setSummary] = useState('')
-  const [file, setFile] = useState(null)
+  const [summary, setSummary] = useState("");
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [myChat, setMyChat] = useState<Chat[]>([]);
 
-
   const handleSaveChat = () => {
-    setActiveQuestion('')
-    setFile(null)
-  }
+    setActiveQuestion("");
+    setFile(null);
+  };
 
   const handleFileUpload = async () => {
     if (!file) {
@@ -56,22 +54,43 @@ export default function Home() {
 
       // Set the returned summary if present
       setSummary(response.data.summary);
-      setMyChat((d) => [...d, { "question": activeQuestion, "answer": response.data.summary }])
+      setMyChat((d) => [
+        ...d,
+        { question: activeQuestion, answer: response.data.summary },
+      ]);
     } catch (error) {
       console.error("Error summarizing document:", error);
     } finally {
       setLoading(false); // Hide loading state
     }
-  }
-
-
+  };
 
   const getTab = (selectedTab: string) => {
     switch (selectedTab) {
       case "Q&A":
-        return <Questions setInput={setActiveQuestion} input={activeQuestion} handleFileUpload={handleFileUpload} save={handleSaveChat} myChat={myChat} />;
+        return (
+          <Questions
+            setInput={setActiveQuestion}
+            input={activeQuestion}
+            handleFileUpload={handleFileUpload}
+            save={handleSaveChat}
+            myChat={myChat}
+          />
+        );
       case "Summarization":
-        return <Summarization handleFileUpload={handleFileUpload} setLoading={setLoading} summary={summary} setSummary={setSummary} selectedFile={file} save={handleSaveChat} getSummary={summary} activeQuestion={activeQuestion} setActiveQuestion={setActiveQuestion} />;
+        return (
+          <Summarization
+            handleFileUpload={handleFileUpload}
+            setLoading={setLoading}
+            summary={summary}
+            setSummary={setSummary}
+            selectedFile={file}
+            save={handleSaveChat}
+            getSummary={summary}
+            activeQuestion={activeQuestion}
+            setActiveQuestion={setActiveQuestion}
+          />
+        );
       case "History":
         return <History />;
       default:
@@ -79,14 +98,17 @@ export default function Home() {
     }
   };
 
-
   const SelectedTab = getTab(selected);
 
   return (
-
     <div className="space-y-6 scroll-smooth">
       <Header />
-      <UploadVideo loading={loading} setLoading={setLoading} selectedFile={file} setSelectedFile={setFile} />
+      <UploadVideo
+        loading={loading}
+        setLoading={setLoading}
+        selectedFile={file}
+        setSelectedFile={setFile}
+      />
       <Topbar activeTab={selected} setActiveTab={setSelected} />
       {SelectedTab}
     </div>
