@@ -49,25 +49,25 @@ function UplaodVideo({ selectedFile, setSelectedFile, loading, setLoading }) {
 
   const userString = localStorage.getItem("user"); // Get the JSON string from localStorage
 
-  const getUserById = async () => {
-    if (userString) {
-      // Parse the string into an object
-      const userDetail = JSON.parse(userString);
-      try {
-        await axios
-          .get(`http://localhost:5000/api/user/getuser/${userDetail.id}`)
-          .then((data) => {
-            setUser(data.data);
-          });
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
+  // const getUserById = async () => {
+  //   if (userString) {
+  //     // Parse the string into an object
+  //     const userDetail = JSON.parse(userString);
+  //     try {
+  //       await axios
+  //         .get(`http://localhost:5000/api/user/getuser/${userDetail.id}`)
+  //         .then((data) => {
+  //           setUser(data.data);
+  //         });
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    getUserById();
-  }, []);
+  // useEffect(() => {
+  //   getUserById();
+  // }, []);
 
   return (
     <div>

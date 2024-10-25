@@ -7,8 +7,9 @@ import Topbar from './Component/Topbar.js';
 import Questions from './Tabs/Questions';
 import Summarization from './Tabs/Summarization';
 import History from './Tabs/History';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SideBar from "../app/Component/sideBar"
+import axios from 'axios';
 export default function Home() {
 
 
@@ -24,6 +25,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [myChat, setMyChat] = useState<Chat[]>([]);
   const [isOpen, setIsOpen] = useState(false)
+  const [token, setToken] = useState('')
 
   const handleSaveChat = () => {
     setActiveQuestion("");
@@ -68,6 +70,13 @@ export default function Home() {
       setLoading(false); // Hide loading state
     }
   };
+
+  useEffect(() => {
+    const myToken = localStorage.getItem('user')
+    setToken(myToken)
+  }, [])
+
+  console.log(token);
 
   const getTab = (selectedTab: string) => {
     switch (selectedTab) {
