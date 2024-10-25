@@ -10,10 +10,6 @@ const config: Config = {
   theme: {
     extend: {
 
-      backgroundImage: {
-        'contactusimg': "url('/Assets/Images/conatus.png')",
-      },
-
  fontFamily: {
   sans: ['Roboto', 'sans-serif'],
     },
