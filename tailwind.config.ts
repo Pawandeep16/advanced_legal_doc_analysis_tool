@@ -1,3 +1,4 @@
+import ContactUs from "@/app/Component/ContactUs";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -8,9 +9,18 @@ const config: Config = {
   ],
   theme: {
     extend: {
+
+      backgroundImage: {
+        'contactusimg': "url('/Assets/Images/conatus.png')",
+      },
+
+ fontFamily: {
+  sans: ['Roboto', 'sans-serif'],
+    },
+
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        main: '#1D4ED8',      // Replace with your primary color
+        secondary: '#9333EA', // Replace with your secondary color
       },
     },
   },

@@ -14,6 +14,34 @@ pnpm dev
 bun dev
 ```
 
+Minimum node version 20.0.0
+
+Lottie animations:
+npm install lottie-web react-lottie
+
+Install SVGR
+npm install @svgr/webpack
+
+Install next authentication
+npm install next-auth
+
+Install Axios
+npm i axios
+
+Install Framer Motion for Animations
+- npm install framer-motion
+
+install React Observer intersection 
+- npm install react-intersection-observer
+
+install emailjs - for getting mails 
+npm install @emailjs/browser
+
+materila icons 
+npm install @mui/icons-material
+
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
