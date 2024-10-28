@@ -32,7 +32,7 @@ export default function Home() {
 
   const handleFileUpload = async () => {
     if (!file) {
-      console.log("No file selected");
+      alert("No file selected");
       return;
     }
     setLoading(true); // Show loading state
@@ -74,7 +74,7 @@ export default function Home() {
     setToken(myToken)
   }, [])
 
-  console.log(token);
+
 
   const getTab = (selectedTab: string) => {
     switch (selectedTab) {
@@ -82,7 +82,6 @@ export default function Home() {
         return (
           <Questions
             setInput={setActiveQuestion}
-            input={activeQuestion}
             handleFileUpload={handleFileUpload}
             save={handleSaveChat}
             myChat={myChat}
@@ -92,10 +91,6 @@ export default function Home() {
         return (
           <Summarization
             handleFileUpload={handleFileUpload}
-            setLoading={setLoading}
-            summary={summary}
-            setSummary={setSummary}
-            selectedFile={file}
             save={handleSaveChat}
             getSummary={summary}
             activeQuestion={activeQuestion}
@@ -121,7 +116,7 @@ export default function Home() {
 
         </div>
         <div className={`mt-5  flex-1 pr-5 space-y-4  ${isOpen ? " w-5/6 " : "   "}`} >
-          <UploadVideo selectedFile={file} setSelectedFile={setFile} loading={loading} setLoading={setLoading} />
+          <UploadVideo selectedFile={file} setSelectedFile={setFile} loading={loading} />
           <Topbar activeTab={selected} setActiveTab={setSelected} />
 
           {SelectedTab}
