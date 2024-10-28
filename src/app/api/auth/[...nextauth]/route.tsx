@@ -2,7 +2,6 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 
 export const options: NextAuthOptions = {
     providers: [
@@ -34,4 +33,6 @@ export const options: NextAuthOptions = {
 };
 
 const handler = NextAuth(options);
+
+// Export the handler
 export { handler as GET, handler as POST };

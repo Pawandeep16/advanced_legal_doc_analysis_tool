@@ -1,8 +1,6 @@
 "use client";
 import Header from './Component/Header';
 import UploadVideo from './Component/UplaodVideo';
-import Services from './Component/Services';
-import Tabs from "./Component/Tabs";
 import Topbar from './Component/Topbar.js';
 import Questions from './Tabs/Questions';
 import Summarization from './Tabs/Summarization';

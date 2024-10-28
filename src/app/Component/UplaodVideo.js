@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie";
-import animationData from "../Assets/aniamtion/cloudUpload.json";
+import animationData from "../Assets/aniamtion/cloudupload.json";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import pdfIcon from "../Assets/icons/Pdficon.png";
