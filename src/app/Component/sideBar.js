@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import {
   FileTextOutlined,
   LogoutOutlined,
-  SavedFilled,
   SaveFilled,
 } from "@ant-design/icons";
 import Link from "next/link";
-import { MessageOutlined } from "@ant-design/icons";
 
 function SideBar({ isOpen, setIsOpen }) {
   const [openChat, setOpenChat] = useState(false);

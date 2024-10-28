@@ -9,9 +9,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_KEY,
 });
 
-// Configure multer for file uploads
-const upload = multer({ storage: multer.memoryStorage() });
-
 export async function GET() {
   return NextResponse.json({ message: "API route is working!" });
 }
@@ -49,27 +46,6 @@ async function parseDocx(buffer) {
     console.error(`Error parsing DOCX: ${error.message}`);
     throw new Error(`Error parsing DOCX: ${error.message}`);
   }
-}
-
-async function convertPdfToDocx(buffer) {
-  const pdfPath = "./temp.pdf"; // Temporary path for the PDF
-  const docxPath = "./temp.docx"; // Temporary path for the DOCX
-
-  // Write the buffer to a temporary PDF file
-  const fs = require("fs");
-  fs.writeFileSync(pdfPath, buffer);
-
-  // Convert PDF to DOCX
-  await convert(pdfPath, docxPath);
-
-  // Read the converted DOCX file
-  const docxBuffer = fs.readFileSync(docxPath);
-
-  // Cleanup temporary files
-  fs.unlinkSync(pdfPath);
-  fs.unlinkSync(docxPath);
-
-  return docxBuffer; // Return the DOCX buffer
 }
 
 // Function to parse XML files

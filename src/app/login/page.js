@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import eyeIcon from "../Assets/icons/eye-43.png";
-import apple from "../Assets/icons/apple.png";
 import fb from "../Assets/icons/fb.png";
 import google from "../Assets/icons/google.webp";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Header from "../Component/Header";
 import Logo from "../Assets/icons/Logo_dark.svg";
 import { getProviders, signIn, useSession } from "next-auth/react";
@@ -13,7 +12,7 @@ import axios from "axios";
 import Lottie from "react-lottie";
 import animationData from "../Assets/aniamtion/googleLoad.json";
 
-function page() {
+function Page() {
   const defaultOptions = {
     loop: false,
     animationData: animationData,
@@ -35,7 +34,6 @@ function page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
-  const [userExist, setUserExist] = useState();
 
   const registerUserWithGoogle = async () => {
     setLoading(true);
@@ -291,7 +289,7 @@ function page() {
                 </p>
               ) : (
                 <p className="text-[16px] text-[#4f4f4f]">
-                  Don't have an account?
+                  Don&apos;t have an account?
                   <span
                     onClick={() => setSignUp(true)}
                     className="text-blue-700 font-semibold ml-2 cursor-pointer"
@@ -339,4 +337,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
