@@ -3,7 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import { NextAuthOptions } from "next-auth";
 
-export const options: NextAuthOptions = {
+const options: NextAuthOptions = {
     providers: [
         GoogleProvider({
             clientId: "1046309395840-1djerhhmu6auhqpt9rs8g2iigog5lht8.apps.googleusercontent.com",
