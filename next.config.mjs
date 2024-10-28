@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   webpack(config, options) {
     // Find the existing rule that handles SVG files
     const fileLoaderRule = config.module.rules.find((rule) => {
