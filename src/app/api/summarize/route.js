@@ -1,6 +1,5 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import multer from "multer";
 import AdmZip from "adm-zip";
 import { parseStringPromise } from "xml2js";
 

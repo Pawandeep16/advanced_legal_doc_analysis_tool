@@ -1,21 +1,11 @@
 "use client";
 import React, { useRef, useState } from "react";
-import Lottie from "react-lottie";
-// import animationData from "../Assets/aniamtion/cloudupload.json";
 import pdfIcon from "../Assets/icons/Pdficon.png";
 import wordIcon from "../Assets/icons/wordicon.png";
 import Image from "next/image";
 import uploadCloud from "../Assets/icons/uploadcloud.png";
 
 function UplaodVideo({ selectedFile, setSelectedFile, loading }) {
-  // const defaultOptions = {
-  //   loop: false,
-  //   animationData: animationData,
-  //   rendererSettings: {
-  //     preserveAspectRatio: "xMidYMid slice",
-  //   },
-  // };
-
   const filePickerRef = useRef(null);
   const [fileExtention, setFileExtention] = useState([]);
 

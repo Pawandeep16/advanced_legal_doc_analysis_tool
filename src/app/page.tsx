@@ -74,6 +74,7 @@ export default function Home() {
     setToken(myToken)
   }, [])
 
+  console.log(token);
 
 
   const getTab = (selectedTab: string) => {
