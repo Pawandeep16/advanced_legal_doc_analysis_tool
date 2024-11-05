@@ -9,6 +9,7 @@ import Summarization from './Tabs/Summarization';
 import History from './Tabs/History';
 import { useState } from 'react';
 import SideBar from "../app/Component/sideBar"
+import axios from 'axios';
 export default function Home() {
 
 
