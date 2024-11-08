@@ -4,8 +4,14 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  webpack(config, options) {
-    // Find the existing rule that handles SVG files
+  webpack(config) {
+    config.resolve.fallback = {
+      fs: false,
+      path: false,
+      child_process: false,
+      worker_threads: false, // Explicitly disable worker threads if not needed
+    };
+
     const fileLoaderRule = config.module.rules.find((rule) => {
       // Ensure rule.test exists and is a RegExp before calling .test()
       return rule.test instanceof RegExp && rule.test.test(".svg");

@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
 import { parseStringPromise } from "xml2js";
+import Tesseract from "tesseract.js";
 
 // Setup OpenAI configuration
 const openai = new OpenAI({
@@ -45,6 +46,12 @@ async function parseDocx(buffer) {
     console.error(`Error parsing DOCX: ${error.message}`);
     throw new Error(`Error parsing DOCX: ${error.message}`);
   }
+}
+
+// Function to perform OCR on images
+async function parseImage(buffer) {
+  const ocrResult = await Tesseract.recognize(buffer, "eng");
+  return ocrResult.data.text;
 }
 
 // Function to parse XML files
@@ -100,6 +107,11 @@ export async function POST(request) {
     ) {
       const fileBuffer = Buffer.from(await file.arrayBuffer());
       content = await parseXml(fileBuffer);
+    }
+    // Handle Image files (JPG, PNG)
+    else if (["image/jpeg", "image/png"].includes(file.type)) {
+      const fileBuffer = Buffer.from(await file.arrayBuffer());
+      content = await parseImage(fileBuffer);
     }
     // Unsupported file type
     else {
