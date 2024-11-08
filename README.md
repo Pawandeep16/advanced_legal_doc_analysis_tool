@@ -40,6 +40,10 @@ npm install @emailjs/browser
 materila icons 
 npm install @mui/icons-material
 
+<!-- conversions -->
+npm install formidable
+npm install python-shell
+pip install pdf2docx
 
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

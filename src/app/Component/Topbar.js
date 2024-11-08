@@ -1,11 +1,12 @@
 import React from "react";
 
 function Topbar({ activeTab, setActiveTab }) {
+  
   const tabs = ["Summarization", "Q&A", "History"];
 
   return (
-    <div className=" bg-[#1d2146] flex  items-center justify-around px-1 py-2 max-w-[80%] mx-auto">
-      {tabs.map((item, i) => (
+    <div className="max-w-[80%]  mx-auto bg-[#1d2146] flex  items-center justify-around px-1 py-2">
+      {tabs.map((item,i) => (
         <h1
           key={i}
           onClick={() => setActiveTab(item)}

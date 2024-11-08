@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import React, { useEffect } from "react";
 
 function Summarization({
@@ -7,6 +8,10 @@ function Summarization({
   setActiveQuestion,
   getSummary,
   save,
+  selectedFile,
+  summary,
+  setLoading,
+  setSummary,
   handleFileUpload,
 }) {
   const generalQuestions = [

@@ -38,10 +38,10 @@ function ContactUs() {
 
   return (
     <div className="relative bg-black h-full flex flex-col-reverse  lg:flex-row text-white">
-      <div className="z-20 mt-20 p-10 flex flex-col justify-center items-center lg:w-1/2">
+      <div className="z-20  p-10 flex flex-col justify-center items-center lg:w-1/2">
         <h1 className="text-6xl md:text-8xl font-bold text-center">Contact Us</h1>
         <div className="mt-10 w-full max-w-lg">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="text-black">
             <input
               className="w-full px-4 py-3 outline-none rounded-lg border border-gray-500 mb-5"
               type="text"
@@ -77,7 +77,7 @@ function ContactUs() {
           )}
         </div>
       </div>
-      <div className="lg:w-1/2  ">
+      <div className="lg:w-1/2   ">
         <Image
           src="/Assets/Images/conatus.png"
           alt="Conatus Icon"

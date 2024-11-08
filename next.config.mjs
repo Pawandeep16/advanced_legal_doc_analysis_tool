@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 
   webpack(config) {
     config.resolve.fallback = {
@@ -12,6 +9,10 @@ const nextConfig = {
       worker_threads: false, // Explicitly disable worker threads if not needed
     };
 
+
+  
+  webpack(config, options) {
+    // Find the existing rule that handles SVG files
     const fileLoaderRule = config.module.rules.find((rule) => {
       // Ensure rule.test exists and is a RegExp before calling .test()
       return rule.test instanceof RegExp && rule.test.test(".svg");
@@ -40,5 +41,6 @@ const nextConfig = {
     ],
   },
 };
+
 
 export default nextConfig;
