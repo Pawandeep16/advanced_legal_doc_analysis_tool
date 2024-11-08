@@ -1,9 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 
-function Questions({ input, setInput, handleFileUpload, save, myChat }) {
-  const [chatField, setChatField] = useState(false);
-
+function Questions({ setInput, handleFileUpload, save, myChat }) {
   return (
     <div className="max-w-[80%] mx-auto space-y-10 ">
       {myChat.length > 0 && (

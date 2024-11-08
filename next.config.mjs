@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+
+
+  
   webpack(config, options) {
     // Find the existing rule that handles SVG files
     const fileLoaderRule = config.module.rules.find((rule) => {
@@ -30,5 +33,6 @@ const nextConfig = {
     ],
   },
 };
+
 
 export default nextConfig;

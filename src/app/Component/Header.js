@@ -34,7 +34,11 @@ function Header() {
                   {/* Inner circle */}
                   <div className="rounded-full bg-white w-full h-full flex justify-center items-center">
                     <Image
-                      onClick={() => signOut()}
+                      onClick={() => {
+                        signOut().then(() => {
+                          localStorage.removeItem("userToken");
+                        });
+                      }}
                       src={session?.user?.image}
                       alt="profile pic"
                       height={50}
