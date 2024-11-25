@@ -1,58 +1,121 @@
-// pages/api/convert.js
-import { NextApiRequest, NextApiResponse } from 'next';
-import formidable from 'formidable';
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
+import { NextResponse } from "next/server";
+import mammoth from "mammoth"; // Use mammoth for DOCX parsing
+import OpenAI from "openai";
 
-// Disable the bodyParser so that Next.js doesn't try to parse the file automatically
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// Initialize OpenAI API
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_KEY,
+});
 
-// Helper function to parse the form data using formidable
-const parseForm = (req) => {
-  return new Promise((resolve, reject) => {
-    const form = new formidable.IncomingForm();
-    form.parse(req, (err, fields, files) => {
-      if (err) reject(err);
-      resolve({ fields, files });
-    });
-  });
-};
-
-// Main handler function
-export default async function handler(req = new NextApiRequest(), res = new NextApiResponse()) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
+export async function POST(req) {
   try {
-    // Parse the incoming form data
-    const { files } = await parseForm(req);
+    const formData = await req.formData();
+    const file = formData.get("pdfFile");
 
-    // Assuming the uploaded file is named 'file' in the formData
-    const uploadedFile = files.file;
-    if (!uploadedFile) {
-      return res.status(400).json({ error: 'No file uploaded' });
+    if (!file) {
+      return NextResponse.json(
+        { error: "PDF file is required" },
+        { status: 400 }
+      );
     }
 
-    // Read the uploaded file (it's stored temporarily by formidable)
-    const filePath = uploadedFile.filepath;
+    // Define temporary paths for the uploaded PDF and converted DOCX
+    const uploadsDir = path.join(process.cwd(), "uploads");
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
 
-    // Conversion logic: Here, you should add your logic to convert PDF to DOCX.
-    // For example:
-    const convertedFilePath = path.join(process.cwd(), 'public', '/scripts');
-    // Replace the following line with your actual PDF-to-DOCX conversion logic.
-    fs.copyFileSync(filePath, convertedFilePath); // For now, just copying the file as a placeholder
+    const pdfPath = path.join(uploadsDir, file.name);
+    const docxPath = pdfPath.replace(".pdf", ".docx");
 
-    // Send the converted DOCX file as a response
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-    res.setHeader('Content-Disposition', 'attachment; filename="converted.docx"');
-    res.status(200).send(fs.readFileSync(convertedFilePath));
+    // Save the PDF file locally
+    const pdfBuffer = Buffer.from(await file.arrayBuffer());
+    fs.writeFileSync(pdfPath, pdfBuffer);
+
+    // Execute the Python script for conversion
+    const scriptPath = path.join(process.cwd(), "scripts", "convert_pdf.py");
+    const { spawn } = require("child_process");
+
+    const pythonProcess = spawn("python", [scriptPath, pdfPath, docxPath]);
+
+    return new Promise((resolve, reject) => {
+      pythonProcess.on("close", async (code) => {
+        if (code === 0) {
+          // After successful conversion, read the DOCX file
+          if (!fs.existsSync(docxPath)) {
+            return reject(
+              NextResponse.json(
+                { error: "DOCX file was not generated" },
+                { status: 500 }
+              )
+            );
+          }
+
+          // Use Mammoth to extract text content from the DOCX file
+          const docxBuffer = fs.readFileSync(docxPath);
+          let content;
+          try {
+            const result = await mammoth.extractRawText({ buffer: docxBuffer });
+            content = result.value; // Extracted text content
+          } catch (error) {
+            console.error("Error parsing DOCX with Mammoth:", error);
+            return reject(
+              NextResponse.json(
+                { error: "Failed to parse DOCX file" },
+                { status: 500 }
+              )
+            );
+          }
+
+          // Send content to OpenAI for summarization
+          const question =
+            formData.get("question") || "Summarize this document.";
+          try {
+            const response = await openai.chat.completions.create({
+              model: "gpt-3.5-turbo",
+              messages: [
+                { role: "system", content: "Summarize this document." },
+                { role: "user", content: content },
+                { role: "user", content: `Question: ${question}` },
+              ],
+            });
+
+            resolve(
+              NextResponse.json(
+                { summary: response.choices[0].message.content },
+                { status: 200 }
+              )
+            );
+          } catch (error) {
+            console.error("Error with OpenAI API:", error);
+            return reject(
+              NextResponse.json(
+                { error: "Failed to generate summary" },
+                { status: 500 }
+              )
+            );
+          }
+        } else {
+          reject(
+            NextResponse.json(
+              { error: "Python script execution failed" },
+              { status: 500 }
+            )
+          );
+        }
+      });
+
+      pythonProcess.stderr.on("data", (data) => {
+        console.error("Python script error:", data.toString());
+      });
+    });
   } catch (error) {
-    console.error("Error handling file upload:", error);
-    res.status(500).json({ error: 'Conversion failed' });
+    console.error("Error in POST handler:", error);
+    return NextResponse.json(
+      { error: error.message || "An error occurred" },
+      { status: 500 }
+    );
   }
 }

@@ -26,9 +26,9 @@ function Homepage() {
           <h1 className="text-white text-4xl md:text-6xl lg:text-7xl xl:text-9xl font-bold z-10 p-5">
             Advanced Legal Document Analysis Tool
           </h1>
-          <h2 className="text-white text-xl md:text-2xl lg:text-3xl font-bold z-10 p-5">
+          <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-bold z-10 p-5">
             Revolutionizing Legal Workflows with AI-Powered Document Analysis
-          </h2>
+          </h1>
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57]/90 via-black/20 to-black opacity-100"></div>
       </div>

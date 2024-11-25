@@ -1,19 +1,19 @@
 "use client";
 import React from "react";
 
-function Questions({ setInput, handleFileUpload, save, myChat }) {
+function Questions({ setInput, handleFileUpload, save, myChat, setTitle }) {
   return (
     <div className="max-w-[80%] mx-auto space-y-10 ">
       {myChat.length > 0 && (
         <div className="w-full max-h-[300px] bg-[#525672] overflow-y-scroll">
           {myChat.map((item, i) => (
             <div key={i} className=" px-4 space-y-4 py-4 w-full">
-              <div className="w-full flex justify-start ">
+              <div className="w-full flex justify-end ">
                 <p className="max-w-[250px] bg-gray-400 px-4 py-2 rounded-md">
                   {item.question}
                 </p>
               </div>
-              <div className="w-full flex justify-end ">
+              <div className="w-full flex justify-start ">
                 <p className="max-w-[500px] bg-blue-500 px-4 py-2 rounded-md">
                   {item.answer}
                 </p>
@@ -39,6 +39,7 @@ function Questions({ setInput, handleFileUpload, save, myChat }) {
         </button>
         <div className="flex items-center space-x-4">
           <input
+            onChange={(e) => setTitle(e.target.value)}
             type="text"
             placeholder="Chat Log Title"
             className="border border-gray-500 outline-none p-2 rounded-md"
