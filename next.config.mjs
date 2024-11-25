@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-
-
-  
   webpack(config, options) {
+    config.resolve.fallback = {
+      fs: false,
+      path: false,
+      child_process: false,
+      worker_threads: false, // Explicitly disable worker threads if not needed
+    };
     // Find the existing rule that handles SVG files
     const fileLoaderRule = config.module.rules.find((rule) => {
       // Ensure rule.test exists and is a RegExp before calling .test()
@@ -33,6 +36,5 @@ const nextConfig = {
     ],
   },
 };
-
 
 export default nextConfig;

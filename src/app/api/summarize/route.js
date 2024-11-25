@@ -2,15 +2,13 @@ import OpenAI from "openai";
 import { NextResponse } from "next/server";
 import AdmZip from "adm-zip";
 import { parseStringPromise } from "xml2js";
+import Tesseract from "tesseract.js";
+import fs from "fs/promises";
 
 // Setup OpenAI configuration
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_KEY,
 });
-
-export async function GET() {
-  return NextResponse.json({ message: "API route is working!" });
-}
 
 // Function to parse DOCX files
 async function parseDocx(buffer) {
@@ -47,6 +45,12 @@ async function parseDocx(buffer) {
   }
 }
 
+// Function to perform OCR on images
+async function parseImage(buffer) {
+  const ocrResult = await Tesseract.recognize(buffer, "eng");
+  return ocrResult.data.text;
+}
+
 // Function to parse XML files
 async function parseXml(buffer) {
   try {
@@ -59,14 +63,17 @@ async function parseXml(buffer) {
   }
 }
 
-// POST function to handle file uploads and send content to OpenAI for summarization
 export async function POST(request) {
   const formData = await request.formData();
   const file = formData.get("file");
-  const question = formData.get("question"); // Extract the question from form data
+  const filePath = formData.get("filePath"); // Extract path for converted `.docx`
+  const question = formData.get("question");
 
-  if (!file || file.size === 0) {
-    return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
+  if (!file && !filePath) {
+    return NextResponse.json(
+      { error: "No file or file path provided." },
+      { status: 400 }
+    );
   }
 
   if (!question || question.trim().length === 0) {
@@ -77,62 +84,65 @@ export async function POST(request) {
   }
 
   try {
-    console.log(
-      `Received file: ${file.name}, size: ${file.size}, type: ${file.type}`
-    );
-
     let content = "";
 
-    // Handle DOCX files
-    if (
-      file.type ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    ) {
+    if (file) {
       const fileBuffer = Buffer.from(await file.arrayBuffer());
+
+      // Handle PDF Conversion
+      if (file.type === "application/pdf") {
+        return NextResponse.json(
+          { message: "PDF detected. Convert to DOCX first." },
+          { status: 400 }
+        );
+      }
+
+      // Handle DOCX files
+      if (
+        file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
+        content = await parseDocx(fileBuffer);
+      }
+      // Handle XML files
+      else if (
+        file.type === "text/xml" ||
+        file.type === "application/xml" ||
+        file.type === "application/xhtml+xml" ||
+        file.type === "text/plain"
+      ) {
+        content = await parseXml(fileBuffer);
+      }
+      // Handle Image files (JPG, PNG)
+      else if (["image/jpeg", "image/png"].includes(file.type)) {
+        content = await parseImage(fileBuffer);
+      } else {
+        throw new Error(
+          `Uploaded file type is: ${file.type}. Expected DOCX, XML, or images.`
+        );
+      }
+    }
+
+    // Handle `.docx` via file path (after PDF conversion)
+    if (filePath) {
+      const fileBuffer = await fs.readFile(filePath);
       content = await parseDocx(fileBuffer);
-    }
-    // Handle XML files
-    else if (
-      file.type === "text/xml" ||
-      file.type === "application/xml" ||
-      file.type === "application/xhtml+xml" ||
-      file.type === "text/plain"
-    ) {
-      const fileBuffer = Buffer.from(await file.arrayBuffer());
-      content = await parseXml(fileBuffer);
-    }
-    // Unsupported file type
-    else {
-      throw new Error(
-        `Uploaded file type is: ${file.type}. Expected DOCX, PDF, XML, or XLSX.`
-      );
     }
 
     console.log("Extracted content:", content);
 
-    // Construct the messages array correctly
-    const messages = [
-      {
-        role: "system",
-        content: "Summarize this document based on the following question.",
-      },
-      {
-        role: "user",
-        content: `Document content: ${content}`,
-      },
-      {
-        role: "user",
-        content: `Question: ${question}`, // Add the question here
-      },
-    ];
-
-    // Call OpenAI API to summarize the extracted document based on the question
+    // Call OpenAI API
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
-      messages: messages, // Use the correctly structured messages
+      messages: [
+        {
+          role: "system",
+          content: "Summarize this document based on the following question.",
+        },
+        { role: "user", content: `Document content: ${content}` },
+        { role: "user", content: `Question: ${question}` },
+      ],
     });
-
-    console.log("OpenAI Response:", response.choices[0].message.content);
 
     return new Response(
       JSON.stringify({ summary: response.choices[0].message.content }),

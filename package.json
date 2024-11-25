@@ -16,6 +16,7 @@
     "axios": "^1.7.7",
     "busboy": "^1.6.0",
     "child_process": "^1.0.2",
+    "docx": "^9.0.3",
     "formidable": "^3.5.2",
     "framer-motion": "^11.11.9",
     "fs": "^0.0.1-security",

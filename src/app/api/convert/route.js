@@ -1,40 +1,121 @@
-import { PythonShell } from 'python-shell';
-import path from 'path';
-import fs from 'fs';
+import fs from "fs";
+import path from "path";
+import { NextResponse } from "next/server";
+import mammoth from "mammoth"; // Use mammoth for DOCX parsing
+import OpenAI from "openai";
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') { // Check if the request is POST
-    const { pdfPath, wordPath } = req.body;
+// Initialize OpenAI API
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_KEY,
+});
 
-    if (!pdfPath || !wordPath) {
-      return res.status(400).json({ error: 'PDF path and Word path are required' });
+export async function POST(req) {
+  try {
+    const formData = await req.formData();
+    const file = formData.get("pdfFile");
+
+    if (!file) {
+      return NextResponse.json(
+        { error: "PDF file is required" },
+        { status: 400 }
+      );
     }
 
-    try {
-      const scriptPath = path.join(process.cwd(), 'src', 'app', 'scripts', 'convert_pdf.py');
+    // Define temporary paths for the uploaded PDF and converted DOCX
+    const uploadsDir = path.join(process.cwd(), "uploads");
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
 
-      if (!fs.existsSync(pdfPath)) {
-        return res.status(400).json({ error: 'PDF file not found at specified path' });
-      }
+    const pdfPath = path.join(uploadsDir, file.name);
+    const docxPath = pdfPath.replace(".pdf", ".docx");
 
-      const options = {
-        pythonOptions: ['-u'],
-        args: [pdfPath, wordPath],
-      };
+    // Save the PDF file locally
+    const pdfBuffer = Buffer.from(await file.arrayBuffer());
+    fs.writeFileSync(pdfPath, pdfBuffer);
 
-      PythonShell.run(scriptPath, options, function (err, results) {
-        if (err) {
-          console.error('Python script error:', err);
-          return res.status(500).json({ error: err.message });
+    // Execute the Python script for conversion
+    const scriptPath = path.join(process.cwd(), "scripts", "convert_pdf.py");
+    const { spawn } = require("child_process");
+
+    const pythonProcess = spawn("python", [scriptPath, pdfPath, docxPath]);
+
+    return new Promise((resolve, reject) => {
+      pythonProcess.on("close", async (code) => {
+        if (code === 0) {
+          // After successful conversion, read the DOCX file
+          if (!fs.existsSync(docxPath)) {
+            return reject(
+              NextResponse.json(
+                { error: "DOCX file was not generated" },
+                { status: 500 }
+              )
+            );
+          }
+
+          // Use Mammoth to extract text content from the DOCX file
+          const docxBuffer = fs.readFileSync(docxPath);
+          let content;
+          try {
+            const result = await mammoth.extractRawText({ buffer: docxBuffer });
+            content = result.value; // Extracted text content
+          } catch (error) {
+            console.error("Error parsing DOCX with Mammoth:", error);
+            return reject(
+              NextResponse.json(
+                { error: "Failed to parse DOCX file" },
+                { status: 500 }
+              )
+            );
+          }
+
+          // Send content to OpenAI for summarization
+          const question =
+            formData.get("question") || "Summarize this document.";
+          try {
+            const response = await openai.chat.completions.create({
+              model: "gpt-3.5-turbo",
+              messages: [
+                { role: "system", content: "Summarize this document." },
+                { role: "user", content: content },
+                { role: "user", content: `Question: ${question}` },
+              ],
+            });
+
+            resolve(
+              NextResponse.json(
+                { summary: response.choices[0].message.content },
+                { status: 200 }
+              )
+            );
+          } catch (error) {
+            console.error("Error with OpenAI API:", error);
+            return reject(
+              NextResponse.json(
+                { error: "Failed to generate summary" },
+                { status: 500 }
+              )
+            );
+          }
+        } else {
+          reject(
+            NextResponse.json(
+              { error: "Python script execution failed" },
+              { status: 500 }
+            )
+          );
         }
-
-        res.status(200).json({ output: results });
       });
-    } catch (error) {
-      console.error('Handler error:', error);
-      res.status(500).json({ error: error.message });
-    }
-  } else {
-    res.status(405).json({ error: 'Method not allowed' });
+
+      pythonProcess.stderr.on("data", (data) => {
+        console.error("Python script error:", data.toString());
+      });
+    });
+  } catch (error) {
+    console.error("Error in POST handler:", error);
+    return NextResponse.json(
+      { error: error.message || "An error occurred" },
+      { status: 500 }
+    );
   }
 }

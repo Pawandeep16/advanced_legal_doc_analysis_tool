@@ -62,7 +62,7 @@ const teamMembers = [
 
 const TeamMembers = () => {
   return (
-    <div className="relative  bg-black">
+    <div className="relative bg-black">
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-black/20 to-[#5e066f]"></div>
 
@@ -86,7 +86,7 @@ const TeamMembers = () => {
           {teamMembers.map((member, index) => (
             <motion.div
               key={index}
-              className="flex-none w-72 bg-white shadow-md rounded-lg p-6 transform transition duration-300 hover:scale-105 hover:shadow-lg"
+              className="flex-none w-72 bg-white shadow-md rounded-lg p-6 transform transition duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-400"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.2, ease: "easeOut" }}

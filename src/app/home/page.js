@@ -36,15 +36,9 @@ function Homepage() {
           >
             Advanced Legal Document Analysis Tool
           </motion.h1>
-          {/* Subheading Animation */}
-          <motion.h2
-            className="text-white text-xl md:text-2xl lg:text-3xl font-bold z-10 p-5"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
-          >
+          <h1 className="text-white text-xl md:text-2xl lg:text-3xl font-bold z-10 p-5">
             Revolutionizing Legal Workflows with AI-Powered Document Analysis
-          </motion.h2>
+          </h1>
         </div>
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57] via-black/20 to-black opacity-100"></div>

@@ -8,10 +8,6 @@ function Summarization({
   setActiveQuestion,
   getSummary,
   save,
-  selectedFile,
-  summary,
-  setLoading,
-  setSummary,
   handleFileUpload,
 }) {
   const generalQuestions = [
