@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { init, send } from '@emailjs/browser';
-
+import backImage from "../Assets/icons/contactus.png"
 // Initialize EmailJS with your User ID
 init('user_6xnkAOnakPLCYPRAVZ4zR'); // Replace with your EmailJS User ID
 
@@ -79,7 +79,7 @@ function ContactUs() {
       </div>
       <div className="lg:w-1/2   ">
         <Image
-          src="/Assets/Images/conatus.png"
+          src={backImage}
           alt="Conatus Icon"
           layout="responsive"
           height={500}

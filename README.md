@@ -40,10 +40,17 @@ npm install @emailjs/browser
 materila icons 
 npm install @mui/icons-material
 
+
+<!-- type writter effect -->
+npm install react-simple-typewriter
+
 <!-- conversions -->
 npm install formidable
 npm install python-shell
 pip install pdf2docx
+
+npm install swiper
+
 
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

@@ -1,75 +1,71 @@
 'use client';
-import axios from 'axios';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-function Page() {
-  const [file, setFile] = useState(null);
-  const [isConverting, setIsConverting] = useState(false);
-  const [downloadLink, setDownloadLink] = useState(null);
+export default function ConvertPdfToWordComponent() {
+  const [pdfFile, setPdfFile] = useState(null); // To store the uploaded PDF file
+  const [wordPath, setWordPath] = useState(''); // New input for Word file path
+  const [output, setOutput] = useState(''); // To display output messages
 
   const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-    setDownloadLink(null); // Reset download link on new file upload
+    setPdfFile(event.target.files[0]);
   };
 
-  const handleConvert = async () => {
-    if (!file) {
-      alert("Please upload a PDF file first.");
+  const convertPdfToWord = async () => {
+    if (!pdfFile) {
+      alert('Please upload a PDF file first.');
       return;
     }
 
-    setIsConverting(true);
+    if (!wordPath) {
+      alert('Please specify a path to save the DOCX file.');
+      return;
+    }
+
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', pdfFile);
+    formData.append('pdfPath', pdfFile.name); // Using file name as pdfPath
+    formData.append('wordPath', wordPath); // Specified path to save the DOCX file
 
     try {
-      const response = await axios.post('/api/convert', formData, {
-        responseType: 'blob', // Important for handling file downloads
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await fetch('/api/convert', {
+        method: 'POST',
+        body: formData,
       });
 
-      // Create a URL for the converted file and set it for download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      setDownloadLink(url);
+      const data = await response.json();
+      if (response.ok) {
+        setOutput('Conversion Successful');
+      } else {
+        setOutput(`Error: ${data.error}`);
+      }
     } catch (error) {
-      console.error("Conversion failed:", error);
-      alert("An error occurred during the conversion. Please try again.");
-    } finally {
-      setIsConverting(false);
+      setOutput(`Error: ${error.message}`);
     }
   };
 
-  // Cleanup URL to prevent memory leaks when component unmounts or download is reset
-  React.useEffect(() => {
-    return () => {
-      if (downloadLink) {
-        window.URL.revokeObjectURL(downloadLink);
-      }
-    };
-  }, [downloadLink]);
-
   return (
-    <div style={{ padding: '20px', border: '1px solid #ccc', borderRadius: '5px', maxWidth: '400px', margin: '0 auto' }}>
-      <h2>PDF to Word Converter</h2>
-      <input type="file" accept=".pdf" onChange={handleFileChange} />
-      
-      <button 
-        onClick={handleConvert} 
-        disabled={!file || isConverting}
-        style={{ marginTop: '10px', padding: '10px 20px', cursor: isConverting ? 'not-allowed' : 'pointer' }}
+    <div className="p-4 max-w-md mx-auto bg-white rounded shadow-md">
+      <h2 className="text-lg font-bold mb-4">PDF to Word Converter</h2>
+      <input
+        type="file"
+        accept=".pdf"
+        onChange={handleFileChange}
+        className="mb-4 w-full p-2 border rounded"
+      />
+      <input
+        type="text"
+        placeholder="Specify output Word path (e.g., /tmp/output.docx)"
+        value={wordPath}
+        onChange={(e) => setWordPath(e.target.value)}
+        className="mb-4 w-full p-2 border rounded"
+      />
+      <button
+        onClick={convertPdfToWord}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
-        {isConverting ? 'Converting...' : 'Convert to DOCX'}
+        Convert PDF to Word
       </button>
-
-      {downloadLink && (
-        <div style={{ marginTop: '20px' }}>
-          <a href={downloadLink} download="converted.docx">
-            Download Converted DOCX
-          </a>
-        </div>
-      )}
+      <pre className="mt-4 text-red-500">{output}</pre>
     </div>
   );
 }
-
-export default Page;
