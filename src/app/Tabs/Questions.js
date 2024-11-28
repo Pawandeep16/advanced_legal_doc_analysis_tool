@@ -1,22 +1,35 @@
 "use client";
 import React from "react";
+import { SoundOutlined } from "@ant-design/icons"; // Importing Ant Design icon
 
 function Questions({ setInput, handleFileUpload, save, myChat, setTitle }) {
+  // Function to read text aloud
+  const speakText = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utterance);
+  };
+
   return (
     <div className="xl:max-w-[80%] md:max-w-[50%] max-w-full mx-auto space-y-10 ">
       {myChat.length > 0 && (
         <div className="w-full max-h-[300px] bg-[#525672] overflow-y-scroll">
           {myChat.map((item, i) => (
-            <div key={i} className=" px-4 space-y-4 py-4 w-full">
-              <div className="w-full flex justify-end ">
+            <div key={i} className="px-4 space-y-4 py-4 w-full">
+              <div className="w-full flex justify-end">
                 <p className="max-w-[250px] bg-gray-400 px-4 py-2 rounded-md">
                   {item.question}
                 </p>
               </div>
-              <div className="w-full flex justify-start ">
+              <div className="w-full flex justify-start items-center space-x-2">
                 <p className="max-w-[500px] bg-blue-500 px-4 py-2 rounded-md">
                   {item.answer}
                 </p>
+                <button
+                  onClick={() => speakText(item.answer)}
+                  className="text-white bg-blue-700 p-2 rounded-full hover:bg-blue-800 flex items-center justify-center"
+                >
+                  <SoundOutlined style={{ fontSize: "18px" }} />
+                </button>
               </div>
             </div>
           ))}

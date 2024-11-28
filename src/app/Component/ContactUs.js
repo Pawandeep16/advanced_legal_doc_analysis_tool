@@ -39,7 +39,7 @@ function ContactUs() {
   return (
     <div className="relative bg-black h-full flex flex-col-reverse  lg:flex-row text-white">
       <div className="z-20  p-10 flex flex-col justify-center items-center lg:w-1/2">
-        <h1 className="text-6xl md:text-8xl font-bold text-center">Contact Us</h1>
+        <h1 className="text-6xl md:text-6xl font-bold text-left flex ">Contact Us</h1>
         <div className="mt-10 w-full max-w-lg">
           <form onSubmit={handleSubmit} className="text-black">
             <input
