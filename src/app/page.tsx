@@ -68,6 +68,40 @@ export default function Home() {
         setLoading(false);
       }
     }
+    else if (myFileExtention === "jpg") {
+      const formData = new FormData();
+      formData.append("imageFile", file); // Attach the selected PDF file
+      formData.append("Text", activeQuestion);
+
+      try {
+        // Show loading indicator
+        setLoading(true);
+
+        // Step 1: Convert PDF to DOCX and Summarize in one step
+        const response = await axios.post(
+          "http://localhost:3000/api/image-to-docx",
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        // Extract summary from the response
+        const summary = response.data.summary;
+        console.log("Summary received:", summary);
+
+        // Update the UI with the summary
+        setSummary(summary);
+        setMyChat((d) => [
+          ...d,
+          { question: activeQuestion, answer: summary },
+        ]);
+      } catch (error) {
+        console.error("Error during conversion and summarization:", error);
+        alert("An error occurred. Please try again.");
+      } finally {
+        // Hide loading indicator
+        setLoading(false);
+      }
+    }
     else {
       setLoading(true); // Show loading state
       try {
@@ -189,7 +223,8 @@ export default function Home() {
     <div className="scroll-smooth">
       <Header />
       <div className="flex w-full">
-        <div className="mt-5  flex-1 pr-5 space-y-4" >
+        <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57] via-white/20 to-white opacity-100"></div>
+        <div className="mt-5  flex-1 pr-5 space-y-4 z-20" >
           <UploadVideo selectedFile={file} setSelectedFile={setFile} loading={loading} />
           <Topbar activeTab={selected} setActiveTab={setSelected} />
           {SelectedTab}

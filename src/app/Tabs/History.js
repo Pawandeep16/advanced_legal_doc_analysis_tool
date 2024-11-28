@@ -20,7 +20,7 @@ function History({ summaries }) {
   console.log(historyChat.summary);
 
   return (
-    <div className="max-w-[80%] mx-auto grid grid-cols-3 min-h-[500px]">
+    <div className="xl:max-w-[80%] md:max-w-[80%] max-w-full mx-auto grid grid-cols-3 min-h-[500px]">
       <div className="col-span-1 bg-[#a4a9d1] h-full">
         {summaries?.map((item, i) => (
           <h1

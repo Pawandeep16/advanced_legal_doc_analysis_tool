@@ -3,7 +3,7 @@ import React from "react";
 
 function Questions({ setInput, handleFileUpload, save, myChat, setTitle }) {
   return (
-    <div className="max-w-[80%] mx-auto space-y-10 ">
+    <div className="xl:max-w-[80%] md:max-w-[50%] max-w-full mx-auto space-y-10 ">
       {myChat.length > 0 && (
         <div className="w-full max-h-[300px] bg-[#525672] overflow-y-scroll">
           {myChat.map((item, i) => (

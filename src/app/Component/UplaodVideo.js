@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import pdfIcon from "../Assets/icons/Pdficon.png";
+import jpgIcon from "../Assets/icons/jpgIcon.png";
 import wordIcon from "../Assets/icons/wordicon.png";
 import Image from "next/image";
 import uploadCloud from "../Assets/icons/uploadcloud.png";
@@ -26,6 +27,8 @@ function UplaodVideo({ selectedFile, setSelectedFile, loading }) {
         return <Image src={wordIcon} alt="" height={30} width={30} />;
       case "pdf":
         return <Image src={pdfIcon} alt="" height={30} width={30} />;
+      case "jpg":
+        return <Image src={jpgIcon} alt="" height={30} width={30} />;
       default:
         return;
     }
@@ -35,7 +38,7 @@ function UplaodVideo({ selectedFile, setSelectedFile, loading }) {
 
   return (
     <div>
-      <div className="bg-[#2e324c] p-4 max-w-[80%] mx-auto h-[200px] rounded-lg">
+      <div className="bg-[#2e324c] p-4 xl:max-w-[80%] md:max-w-[50%] max-w-full mx-auto h-[200px] rounded-lg">
         <div className=" bg-[#222949] h-full text-white flex items-center justify-center rounded-md flex-col border border-dashed border-gray-400 relative space-y-2">
           {!selectedFile ? (
             <div className="space-y-4 flex flex-col items-center justify-center">

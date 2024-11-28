@@ -1,6 +1,7 @@
-import pytesseract
+import sys
 from PIL import Image
 from docx import Document
+import pytesseract
 
 # Set the path to Tesseract OCR executable
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -21,9 +22,13 @@ def extract_text_to_docx(image_path, docx_path):
     except Exception as e:
         print(f"Error: {e}")
 
-# Example usage
 if __name__ == "__main__":
-    image_path = r"D:\Notes\Loyalist College\StudyMaterial\AIP\Workspace\doc-analysis-tool\scripts\sample_image.jpg"  # Replace with your image path
-    docx_path = r"D:\Notes\Loyalist College\StudyMaterial\AIP\Workspace\doc-analysis-tool\scripts\extracted_text.docx"  # Replace with your desired output DOCX path
-    
+    if len(sys.argv) < 3:
+        print("Usage: python extract_text_to_docx.py <image_path> <docx_path>")
+        sys.exit(1)
+
+    # Get paths from command-line arguments
+    image_path = sys.argv[1]
+    docx_path = sys.argv[2]
+
     extract_text_to_docx(image_path, docx_path)
