@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import eyeIcon from "../Assets/icons/eye-43.png";
 import fb from "../Assets/icons/fb.png";
+import dynamic from 'next/dynamic';
 import google from "../Assets/icons/google.webp";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -9,15 +10,22 @@ import Header from "../Component/Header";
 import Logo from "../Assets/icons/Logo_dark.svg";
 import { getProviders, signIn, useSession } from "next-auth/react";
 import axios from "axios";
-import Lottie from "react-lottie";
-import animationData from "../Assets/aniamtion/googleLoad.json";
 
+import animationData from "../Assets/aniamtion/googleLoad.json";
+const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
 function Page() {
-  const defaultOptions = {
-    loop: false,
-    animationData: animationData,
+
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+ const defaultOptions = {
+    loop: true,
+    autoplay: true, // Animation plays automatically
+    animationData: {animationData}, // Path to your Lottie JSON animation file
     rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
+      preserveAspectRatio: 'xMidYMid slice',
     },
   };
 
@@ -36,6 +44,7 @@ function Page() {
   const [confirmPassword, setconfirmPassword] = useState("");
 
   const registerUserWithGoogle = async () => {
+    
     setLoading(true);
     if (status === "authenticated" && session?.user) {
       const { email, name } = session.user; // Get email and name from session
@@ -169,7 +178,7 @@ function Page() {
     <>
       {loading ? (
         <div className="h-screen flex items-center justify-center">
-          <Lottie options={defaultOptions} height={300} width={300} />
+           <Lottie options={defaultOptions} height={400} width={400} />
         </div>
       ) : (
         <div>

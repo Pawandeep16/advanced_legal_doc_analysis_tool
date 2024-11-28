@@ -22,7 +22,7 @@ function Header() {
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-4 bg-[#1f3e57] h-[70px] sticky top-0 z-50 relative">
+    <div className="flex items-center justify-between px-4 py-4 bg-[#1f3e57] h-[70px] sticky top-0 z-50 ">
       {/* Logo */}
       <Logo
         onClick={() => router.push("/")}
@@ -31,7 +31,7 @@ function Header() {
 
       {/* User Profile / Login Button */}
       <div className="flex items-center space-x-4 ">
-        <h2 className="text-sm md:text-xl cursor-pointer text-[#F5F5F5]">
+        <div className="text-sm md:text-xl cursor-pointer text-[#F5F5F5]">
           {status === "authenticated" ? (
             <div className="relative flex justify-center items-center">
               {/* Outer circle */}
@@ -62,7 +62,7 @@ function Header() {
               </h2>
             )
           )}
-        </h2>
+        </div>
         {profileActive && (
           <div
             className={`top-[100%] right-[1%] min-w-[500px] bg-gray-900 flex flex-col items-center justify-center absolute space-y-4 text-gray-200 py-2 transition-all duration-150 ease-in-out}`}
