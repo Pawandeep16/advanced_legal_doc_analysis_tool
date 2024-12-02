@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import eyeIcon from "../Assets/icons/eye-43.png";
 import fb from "../Assets/icons/fb.png";
@@ -10,16 +10,32 @@ import Header from "../Component/Header";
 import Logo from "../Assets/icons/Logo_dark.svg";
 import { getProviders, signIn, useSession } from "next-auth/react";
 import axios from "axios";
+
 import animationData from "../Assets/aniamtion/googleLoad.json";
 const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
-
 function Page() {
-  const [isClient, setIsClient] = useState(false);  // Define the state
+
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+ const defaultOptions = {
+    loop: true,
+    autoplay: true, // Animation plays automatically
+    animationData: {animationData}, // Path to your Lottie JSON animation file
+    rendererSettings: {
+      preserveAspectRatio: 'xMidYMid slice',
+    },
+  };
+
   const [signUp, setSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
+  // Get the session and authentication status
   const { data: session, status } = useSession();
   const router = useRouter();
+
   const provider = getProviders();
 
   const [name, setName] = useState("");
@@ -27,36 +43,29 @@ function Page() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
 
-  useEffect(() => {
-    setIsClient(true);  // This will run once the component is mounted
-  }, []);
-
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: { animationData },
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
-    },
-  };
-
   const registerUserWithGoogle = async () => {
+    
     setLoading(true);
     if (status === "authenticated" && session?.user) {
-      const { email, name } = session.user;
+      const { email, name } = session.user; // Get email and name from session
 
       try {
-        await axios.post("http://localhost:5000/api/user/registerUser", {
-          email,
-          fullName: name,
-          isGoogleUser: true,
-        }).then((data) => {
-          localStorage.setItem("userToken", data?.data?.token);
-        });
-
+        await axios
+          .post("http://localhost:5000/api/user/registerUser", {
+            email,
+            fullName: name,
+            isGoogleUser: true,
+          })
+          .then((data) => {
+            localStorage.setItem("userToken", data?.data?.token);
+          });
+        // Redirect to home after successful registration
         router.push("/");
       } catch (err) {
-        console.error("Error during Google sign-up:", err.response?.data || err.message);
+        console.error(
+          "Error during Google sign-up:",
+          err.response?.data || err.message
+        );
       }
     }
   };
@@ -64,13 +73,15 @@ function Page() {
   const signInUserWithGoogle = async () => {
     setLoading(true);
     try {
-      await axios.post(`http://localhost:5000/api/user/loggedInUser`, {
-        email: session?.user?.email,
-        isGoogleUser: true,
-      }).then((data) => {
-        localStorage.setItem("token", data?.data?.token);
-        localStorage.setItem("user", JSON.stringify(data?.data?.user));
-      });
+      await axios
+        .post(`http://localhost:5000/api/user/loggedInUser`, {
+          email: session?.user?.email,
+          isGoogleUser: true,
+        })
+        .then((data) => {
+          localStorage.setItem("token", data?.data?.token);
+          localStorage.setItem("user", JSON.stringify(data?.data?.user));
+        });
       setLoading(false);
       router.push("/");
     } catch (err) {
@@ -79,6 +90,7 @@ function Page() {
   };
 
   useEffect(() => {
+    // Call the function to register user if authenticated
     if (status === "authenticated") {
       if (signUp) {
         registerUserWithGoogle();
@@ -94,25 +106,39 @@ function Page() {
 
   const signUpWithCred = async (email, password, name) => {
     try {
+      // Check if passwords match
+
+      // Create an object with user data
       const data = {
         email: email,
         password,
         fullName: name,
       };
 
-      await axios.post("http://localhost:5000/api/user/registerUser", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((data) => {
-        localStorage.setItem("user", JSON.stringify({
-          token: data.data.token,
-          email: data.data.user.email,
-          name: data.data.user.fullName,
-        }));
-        router.push("/");
-      });
+      // Send POST request to the backend
+      await axios
+        .post("http://localhost:5000/api/user/registerUser", data, {
+          headers: {
+            "Content-Type": "application/json", // Ensure content-type is set to JSON
+          },
+        })
+        .then((data) => {
+          console.log(data.data);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              token: data.data.token,
+              email: data.data.user.email,
+              name: data.data.user.fullName,
+            })
+          );
+          router.push("/");
+        });
+
+      // Navigate to home page after successful registration
+      // router.push("/");
     } catch (err) {
+      // Log detailed error info
       console.error("Error during sign-up:", err.response?.data || err.message);
     }
   };
@@ -124,19 +150,26 @@ function Page() {
         password,
       };
 
-      await axios.post("http://localhost:5000/api/user/loggedInUser", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((data) => {
-        localStorage.setItem("user", JSON.stringify({
-          token: data.data.token,
-          email: data.data.user.email,
-          id: data.data.user.id,
-        }));
-        router.push("/");
-      });
+      await axios
+        .post("http://localhost:5000/api/user/loggedInUser", data, {
+          headers: {
+            "Content-Type": "application/json", // Ensure content-type is set to JSON
+          },
+        })
+        .then((data) => {
+          console.log(data.data);
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              token: data.data.token,
+              email: data.data.user.email,
+              id: data.data.user.id,
+            })
+          );
+          router.push("/");
+        });
     } catch (err) {
+      // Log detailed error info
       console.error("Error during sign-up:", err.response?.data || err.message);
     }
   };
@@ -145,7 +178,7 @@ function Page() {
     <>
       {loading ? (
         <div className="h-screen flex items-center justify-center">
-          <Lottie options={defaultOptions} height={400} width={400} />
+           <Lottie options={defaultOptions} height={400} width={400} />
         </div>
       ) : (
         <div>
@@ -153,11 +186,12 @@ function Page() {
           <div className="flex flex-col items-center justify-center h-screen">
             <div className="w-[30%] flex flex-col items-center justify-center space-y-[30px]">
               <div className="space-y-[15px]">
-                <div className="flex space-x-2">
+                <div className=" flex space-x-2 ">
                   <h1 className="text-5xl text-[#1f3e57]">
+                    {" "}
                     {signUp ? "Sign Up" : "Login"} to{" "}
-                  </h1>
-                  <Logo className="e-x-10 w-[300px] h-[60px]" />
+                  </h1>{" "}
+                  <Logo className=" e-x-10 w-[300px] h-[60px]" />
                 </div>
                 <p className="text-gray-400 text-[20px] text-center">
                   Welcome Back! Please enter your details
@@ -237,35 +271,72 @@ function Page() {
               </div>
               {signUp ? (
                 <button
-                  onClick={() => signUpWithCred(email, password, name)}
-                  className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:bg-[#1f3e57]"
+                  onClick={() =>
+                    signUpWithCred(email, password, name, confirmPassword)
+                  }
+                  className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out"
                 >
                   Sign Up
                 </button>
               ) : (
                 <button
                   onClick={() => signInWithCred(email, password)}
-                  className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:bg-[#1f3e57]"
+                  className="bg-[#1f3e57] w-full px-1 py-[15px] rounded-lg text-white font-semibold active:scale-90 transition duration-200 ease-in-out"
                 >
-                  Login
+                  Sign In
                 </button>
               )}
-            </div>
-            <div className="flex flex-col justify-center items-center py-10 space-y-2">
-              <p className="text-[16px] text-[#4f4f4f]">
-                Or, Continue with{" "}
-              </p>
-              <div className="space-x-3 flex items-center justify-center">
-                <Image
-                  src={google}
-                  onClick={signUpWithGoogle}
-                  className="cursor-pointer w-[40px] h-[40px] rounded-full"
-                />
-                <Image
-                  src={fb}
-                  alt="fb"
-                  className="cursor-pointer w-[40px] h-[40px] rounded-full"
-                />
+              {signUp ? (
+                <p className="text-[16px] text-[#4f4f4f]">
+                  Already have an account?
+                  <span
+                    onClick={() => setSignUp(false)}
+                    className="text-blue-700 font-semibold ml-2 cursor-pointer"
+                  >
+                    login
+                  </span>
+                </p>
+              ) : (
+                <p className="text-[16px] text-[#4f4f4f]">
+                  Don&apos;t have an account?
+                  <span
+                    onClick={() => setSignUp(true)}
+                    className="text-blue-700 font-semibold ml-2 cursor-pointer"
+                  >
+                    Signup
+                  </span>
+                </p>
+              )}
+              <div className="space-y-[20px]">
+                <p className="text-center text-[18px] text-[#4f4f4f]">
+                  Or Login With
+                </p>
+                <div
+                  key={provider.name}
+                  className="flex items-center space-x-8"
+                >
+                  <Image
+                    src={fb}
+                    onClick={() =>
+                      signIn("facebook").then((data) => {
+                        console.log(data);
+                      })
+                    }
+                    alt=""
+                    className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
+                  />
+                  <Image
+                    onClick={signUpWithGoogle}
+                    src={google}
+                    alt=""
+                    className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
+                  />
+                  {/* <Image
+                src={apple}
+                alt=""
+                className="h-[40px] w-[40px] rounded-lg bg-[#f1f1f1] p-2 cursor-pointer active:scale-90 transition duration-200 ease-in-out"
+              /> */}
+                </div>
               </div>
             </div>
           </div>
