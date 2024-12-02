@@ -120,15 +120,13 @@ import fs from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
 import mammoth from "mammoth"; // DOCX parsing
-import { Configuration, OpenAIApi } from "openai"; // Correct import for OpenAI
+import OpenAI from "openai"; // Correct import for OpenAI
 import { spawn } from "child_process";
 
 // Initialize OpenAI API
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPEN_AI_KEY,
-  })
-);
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_KEY,
+});
 
 export async function POST(req) {
   try {
@@ -185,7 +183,7 @@ export async function POST(req) {
             const question =
               formData.get("question") || "Summarize this document.";
 
-            const response = await openai.createChatCompletion({
+            const response = await openai.chat.completions.create({
               model: "gpt-3.5-turbo",
               messages: [
                 { role: "system", content: "Summarize this document." },
@@ -196,7 +194,7 @@ export async function POST(req) {
 
             resolve(
               NextResponse.json(
-                { summary: response.data.choices[0].message.content },
+                { summary: response.choices[0].message.content },
                 { status: 200 }
               )
             );
