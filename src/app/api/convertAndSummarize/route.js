@@ -40,10 +40,10 @@ export async function POST(req) {
     const pythonProcess = spawn("python", [scriptPath, pdfPath, wordPath]);
 
     // Collect Python script output
-    let pythonOutput = "";
-    pythonProcess.stdout.on("data", (data) => {
-      pythonOutput += data.toString();
-    });
+    // let pythonOutput = "";
+    // pythonProcess.stdout.on("data", (data) => {
+    //   pythonOutput += data.toString();
+    // });
 
     pythonProcess.stderr.on("data", (data) => {
       console.error("Python script error:", data.toString());
