@@ -44,43 +44,31 @@ function Homepage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57] via-black/20 to-black opacity-100"></div>
       </div>
 
-    
-        <About />
-    
+      <About />
 
       {/* Information Section */}
       {components.map((item, index) => (
-        
-          <Information
-            direction={item.direction}
-            image={item.image}
-            heading={item.heading}
-            description={item.description}
-          />
-       
+        <Information
+          key={index}
+          direction={item.direction}
+          image={item.image}
+          heading={item.heading}
+          description={item.description}
+        />
       ))}
 
       {/* Plans Section */}
-      
-     
-      
-        <PlansComp />
-      
+
+      <PlansComp />
 
       {/* Team Members Section */}
-      
-      
-      
-        <TeamMembers />
-      
+
+      <TeamMembers />
 
       {/* Contact Us Section */}
-      
-        
-      
-        <ContactUs />
-        <Footer/>
-      
+
+      <ContactUs />
+      <Footer />
     </div>
   );
 }

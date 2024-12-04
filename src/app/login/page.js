@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import eyeIcon from "../Assets/icons/eye-43.png";
 import fb from "../Assets/icons/fb.png";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import google from "../Assets/icons/google.webp";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -12,20 +12,18 @@ import { getProviders, signIn, useSession } from "next-auth/react";
 import axios from "axios";
 
 import animationData from "../Assets/aniamtion/googleLoad.json";
-const Lottie = dynamic(() => import('react-lottie'), { ssr: false });
+const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
 function Page() {
+  // useEffect(() => {
+  //   setIsClient(true);
+  // }, []);
 
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
- const defaultOptions = {
+  const defaultOptions = {
     loop: true,
     autoplay: true, // Animation plays automatically
-    animationData: {animationData}, // Path to your Lottie JSON animation file
+    animationData: { animationData }, // Path to your Lottie JSON animation file
     rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice',
+      preserveAspectRatio: "xMidYMid slice",
     },
   };
 
@@ -44,14 +42,13 @@ function Page() {
   const [confirmPassword, setconfirmPassword] = useState("");
 
   const registerUserWithGoogle = async () => {
-    
     setLoading(true);
     if (status === "authenticated" && session?.user) {
       const { email, name } = session.user; // Get email and name from session
 
       try {
         await axios
-          .post("http://localhost:5000/api/user/registerUser", {
+          .post("https://backend101-two.vercel.app/api/user/registerUser", {
             email,
             fullName: name,
             isGoogleUser: true,
@@ -74,11 +71,12 @@ function Page() {
     setLoading(true);
     try {
       await axios
-        .post(`http://localhost:5000/api/user/loggedInUser`, {
+        .post(`https://backend101-two.vercel.app/api/user/loggedInUser`, {
           email: session?.user?.email,
           isGoogleUser: true,
         })
         .then((data) => {
+          console.log(data);
           localStorage.setItem("token", data?.data?.token);
           localStorage.setItem("user", JSON.stringify(data?.data?.user));
         });
@@ -117,7 +115,7 @@ function Page() {
 
       // Send POST request to the backend
       await axios
-        .post("http://localhost:5000/api/user/registerUser", data, {
+        .post("https://backend101-two.vercel.app/api/user/registerUser", data, {
           headers: {
             "Content-Type": "application/json", // Ensure content-type is set to JSON
           },
@@ -178,7 +176,7 @@ function Page() {
     <>
       {loading ? (
         <div className="h-screen flex items-center justify-center">
-           <Lottie options={defaultOptions} height={400} width={400} />
+          <Lottie options={defaultOptions} height={400} width={400} />
         </div>
       ) : (
         <div>

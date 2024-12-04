@@ -7,9 +7,13 @@ import Summarization from './Tabs/Summarization';
 import History from './Tabs/History';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Homepage from './Component/Homepage'
+import { useSession } from 'next-auth/react';
 
 
 export default function Home() {
+
+  const { status } = useSession();
 
 
   type Chat = {
@@ -166,12 +170,12 @@ export default function Home() {
       formData.append("summary", JSON.stringify(myChat)); // Append summary as a JSON string
 
       // Append the file (if available)
-      if (file) {
-        formData.append("file", file); // Append file
-      }
+      // if (file) {
+      //   formData.append("file", file); // Append file
+      // }
 
       // Make the API request
-      await axios.post("http://localhost:5000/api/summary/saveSummary", formData, {
+      await axios.post("https://backend101-two.vercel.app/api/summary/saveSummary", formData, {
         headers: {
           "Content-Type": "multipart/form-data", // Set content type
         },
@@ -220,6 +224,8 @@ export default function Home() {
   const SelectedTab = getTab(selected);
 
   return (
+    // <>
+    //   {status === "authenticated" ? (
     <div className="scroll-smooth">
       <Header />
       <div className="flex w-full">
@@ -231,5 +237,9 @@ export default function Home() {
         </div>
       </div>
     </div>
+    //   ) : (
+    //     <Homepage />
+    //   )}
+    // </>
   );
 }

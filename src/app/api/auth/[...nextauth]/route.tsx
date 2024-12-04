@@ -14,22 +14,8 @@ const options: NextAuthOptions = {
             clientSecret: "485636026011989",
         }),
     ],
-    // secret: process.env.NEXTAUTH_SECRET,
-
-    // session: {
-    //     strategy: "jwt", // Use JWT (JSON Web Tokens) for the session
-    //     maxAge: 30 * 24 * 60 * 60, // 30 days (how long the session lasts)
-    //     updateAge: 24 * 60 * 60, // Update the session every 24 hours
-    // },
-
-    // // Optional: Add a callback to manage session information
-    // callbacks: {
-    //     async session({ session, token }) {
-    //         // Add custom fields to the session if needed
-    //         session.user.id = token.sub;
-    //         return session;
-    //     },
-    // },
+    debug: true,
+    secret: process.env.NEXTAUTH_SECRET, // Ensure this is set in your environment variables
 };
 
 const handler = NextAuth(options);
