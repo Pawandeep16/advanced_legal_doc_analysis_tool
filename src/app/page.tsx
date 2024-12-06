@@ -27,12 +27,11 @@ export default function Home() {
   const [selected, setSelected] = useState("Summarization");
   const [activeQuestion, setActiveQuestion] = useState("");
   const [summary, setSummary] = useState("");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [myChat, setMyChat] = useState<Chat[]>([]);
   const [title, setTitle] = useState("")
   const [token, setToken] = useState<string | null>('');
-  const [myUser, setMyUser] = useState<string | null>('');
   const [summaries, setSummaries] = useState([])
 
 
