@@ -8,7 +8,9 @@ function History({ summaries }) {
     // console.log(title);
     try {
       await axios
-        .get(`http://localhost:5000/api/summary/getQuestionsByTitle/${title}`)
+        .get(
+          `https://backend101-two.vercel.app/api/summary/getQuestionsByTitle/${title}`
+        )
         .then((data) => {
           setHistoryChat(data.data);
         });

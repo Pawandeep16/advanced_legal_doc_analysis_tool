@@ -9,6 +9,7 @@ import jaspreetImage from "../Assets/profilepics/jaspreet.png";
 import jeelImage from "../Assets/profilepics/jeel.png";
 import mayankImage from "../Assets/profilepics/mayankpic.png";
 import sakshiImage from "../Assets/profilepics/sakshi.png";
+import darshanImage from "../Assets/profilepics/darshan.png";
 
 // Team data
 const teamMembers = [
@@ -42,13 +43,13 @@ const teamMembers = [
     linkedinprofile: "https://www.linkedin.com/in/darshan-bhut-53a878272/",
     email: "darshanbhut654@gmail.com",
     github: "https://github.com/darshanbhut",
-    image: pawanImage,
+    image: darshanImage,
   },
   {
     name: "Sakshi Patel",
     role: "Technical Content Developer",
-    linkedinprofile: "https://www.linkedin.com/in/sakshi-patel-98628a283/",
-    email: "",
+    linkedinprofile: "https://www.linkedin.com/in/sakshi-patel-98628a283",
+    email: "sakshi3patel@gmail.com",
     github: "https://github.com/sakshipatel",
     image: sakshiImage,
   },
@@ -93,7 +94,7 @@ const TeamMembers = () => {
       <div className="relative z-10 container mx-auto py-12 text-center text-white">
         {/* Animated Heading */}
         <motion.h2
-          className="text-7xl font-semibold mb-6"
+          className="text-3xl md:text-5xl lg:text-7xl font-semibold mb-6"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
@@ -102,25 +103,24 @@ const TeamMembers = () => {
           Meet Our Team
         </motion.h2>
 
-        <p className="mb-12">The experts bringing our vision to life</p>
+        <p className="mb-12 text-sm md:text-base">The experts bringing our vision to life</p>
 
         {/* Team Members Carousel */}
-        <div className="flex justify-center items-center relative ">
+        <div className="flex justify-center items-center relative">
           {/* Previous Button */}
           <button
             onClick={handlePrev}
-            className="absolute left-2 text-white  px-3 py-1 rounded-lg shadow-md hover: z-20 "
+            className="absolute left-2 text-white px-3 py-1 rounded-lg shadow-md hover: z-20"
           >
-            <LeftOutlined style={ { fontSize:"50px"}    } />
-            
+            <LeftOutlined style={{ fontSize: "30px" }} />
           </button>
 
           {/* Team Members */}
-          <div className="flex space-x-4 transition-transform duration-700 ease-in-out  ">
+          <div className="flex space-x-4 transition-transform duration-700 ease-in-out flex-wrap justify-center gap-4">
             {currentMembers.map((member, index) => (
               <motion.div
                 key={index}
-                className="w-72 bg-white shadow-md rounded-lg p-6"
+                className="w-64 sm:w-72 md:w-80 bg-white shadow-md rounded-lg p-6"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.2, ease: "easeOut" }}
@@ -131,7 +131,7 @@ const TeamMembers = () => {
                   src={member.image}
                   alt={`${member.name} Profile`}
                   width={120}
-                  height={100}
+                  height={120}
                 />
                 <h3 className="text-xl font-medium text-gray-800">{member.name}</h3>
                 <p className="text-gray-600">{member.role}</p>
@@ -139,9 +139,7 @@ const TeamMembers = () => {
                   {/* LinkedIn Icon */}
                   {member.linkedinprofile && (
                     <Link target="_blank" href={member.linkedinprofile}>
-                      <LinkedinOutlined
-                        style={{ fontSize: "25px", color: "#0077B5" }}
-                      />
+                      <LinkedinOutlined style={{ fontSize: "25px", color: "#0077B5" }} />
                     </Link>
                   )}
                   {/* Email Icon */}
@@ -164,9 +162,9 @@ const TeamMembers = () => {
           {/* Next Button */}
           <button
             onClick={handleNext}
-            className="absolute right-2 text-white  px-3 py-1 rounded-lg shadow-md hover:text-3xl z-20"
+            className="absolute right-2 text-white px-3 py-1 rounded-lg shadow-md hover:text-3xl z-20"
           >
-            <RightOutlined style={ { fontSize:"50px"}    }  />
+            <RightOutlined style={{ fontSize: "30px" }} />
           </button>
         </div>
       </div>

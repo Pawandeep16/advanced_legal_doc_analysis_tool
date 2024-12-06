@@ -9,17 +9,20 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Homepage from './Component/Homepage'
 import { useSession } from 'next-auth/react';
+import { json } from 'stream/consumers';
 
 
 export default function Home() {
-
-  const { status } = useSession();
 
 
   type Chat = {
     question: string;
     answer: string;
   };
+
+  const { data: session, status } = useSession();
+
+  console.log(session);
 
   const [selected, setSelected] = useState("Summarization");
   const [activeQuestion, setActiveQuestion] = useState("");
@@ -29,6 +32,7 @@ export default function Home() {
   const [myChat, setMyChat] = useState<Chat[]>([]);
   const [title, setTitle] = useState("")
   const [token, setToken] = useState<string | null>('');
+  const [myUser, setMyUser] = useState<string | null>('');
   const [summaries, setSummaries] = useState([])
 
 
@@ -141,7 +145,7 @@ export default function Home() {
 
   const getSummaries = async () => {
     try {
-      await axios.get('http://localhost:5000/api/summary/getSummaries').then((data) => {
+      await axios.get('https://backend101-two.vercel.app/api/summary/getSummaries').then((data) => {
         setSummaries(data.data);
       })
     } catch (err) {
@@ -152,6 +156,8 @@ export default function Home() {
 
   useEffect(() => {
     const myToken = localStorage.getItem('user')
+
+    console.log(myToken);
     if (myToken) {
       setToken(JSON.parse(myToken));
     }
@@ -170,9 +176,9 @@ export default function Home() {
       formData.append("summary", JSON.stringify(myChat)); // Append summary as a JSON string
 
       // Append the file (if available)
-      // if (file) {
-      //   formData.append("file", file); // Append file
-      // }
+      if (file) {
+        formData.append("file", file); // Append file
+      }
 
       // Make the API request
       await axios.post("https://backend101-two.vercel.app/api/summary/saveSummary", formData, {
@@ -221,25 +227,30 @@ export default function Home() {
   };
 
 
+
   const SelectedTab = getTab(selected);
 
   return (
-    // <>
-    //   {status === "authenticated" ? (
-    <div className="scroll-smooth">
-      <Header />
-      <div className="flex w-full">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57] via-white/20 to-white opacity-100"></div>
-        <div className="mt-5  flex-1 pr-5 space-y-4 z-20" >
-          <UploadVideo selectedFile={file} setSelectedFile={setFile} loading={loading} />
-          <Topbar activeTab={selected} setActiveTab={setSelected} />
-          {SelectedTab}
+    <>
+      {status === "authenticated" || token?.id ? (
+        <div className="scroll-smooth">
+          <Header />
+          <div className="flex w-full">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#1f3e57] via-white/20 to-white opacity-100"></div>
+            <div className="mt-5 flex-1 pr-5 space-y-4 z-20">
+              <UploadVideo
+                selectedFile={file}
+                setSelectedFile={setFile}
+                loading={loading}
+              />
+              <Topbar activeTab={selected} setActiveTab={setSelected} />
+              {SelectedTab}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    //   ) : (
-    //     <Homepage />
-    //   )}
-    // </>
+      ) : (
+        <Homepage />
+      )}
+    </>
   );
 }
