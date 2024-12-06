@@ -20,6 +20,12 @@ export default function Home() {
     answer: string;
   };
 
+  interface Token {
+    id: string;
+    email: string;
+    token: string; // Assuming you also store the token in the state
+  }
+
   const { data: session, status } = useSession();
 
   console.log(session);
@@ -31,7 +37,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [myChat, setMyChat] = useState<Chat[]>([]);
   const [title, setTitle] = useState("")
-  const [token, setToken] = useState<string | null>('');
+  const [token, setToken] = useState<Token | null>(null);
   const [summaries, setSummaries] = useState([])
 
 
@@ -154,11 +160,11 @@ export default function Home() {
 
 
   useEffect(() => {
-    const myToken = localStorage.getItem('user')
+    const myToken = localStorage.getItem("user");
 
     console.log(myToken);
     if (myToken) {
-      setToken(JSON.parse(myToken));
+      setToken(JSON.parse(myToken)); // Set the token as the correct type
     }
     getSummaries()
   }, [])
@@ -171,7 +177,7 @@ export default function Home() {
 
       // Append text fields
       formData.append("title", title); // Append title
-      formData.append("userId", token?.id); // Append user ID
+      formData.append("userId", token?.id || ''); // Append user ID
       formData.append("summary", JSON.stringify(myChat)); // Append summary as a JSON string
 
       // Append the file (if available)
